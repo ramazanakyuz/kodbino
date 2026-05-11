@@ -56,6 +56,16 @@ const ICERIK = {
       "scratch_link": "https://scratch.mit.edu",
       "pdf_link": "",
       "video_embed": ""
+    },
+    {
+      "id": "s1778534330953",
+      "baslik": "denemeeee",
+      "kisa_aciklama": "dada",
+      "konu_anlatimi": "adada",
+      "adimlar": [],
+      "pdf_link": "",
+      "video_embed": "",
+      "scratch_link": ""
     }
   ],
   "arduino_projeleri": [

@@ -3,239 +3,393 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MiniYazılımcı</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<title>Kodbino — Hayal Et, Kodla, Geliştir!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --green-50:#EAF3DE; --green-100:#C0DD97; --green-400:#639922; --green-600:#3B6D11; --green-800:#27500A;
-  --purple-50:#EEEDFE; --purple-100:#CECBF6; --purple-400:#7F77DD; --purple-600:#534AB7; --purple-800:#3C3489;
-  --amber-50:#FAEEDA; --amber-100:#FAC775; --amber-400:#BA7517; --amber-600:#854F0B;
-  --blue-50:#E6F1FB; --blue-400:#378ADD; --blue-600:#185FA5;
-  --text:#1a2a0a; --muted:#5a7040; --border:rgba(99,153,34,0.15);
-  --radius-md:10px; --radius-lg:16px; --radius-xl:24px;
+  --navy:#1a1f6e;
+  --purple:#7c5ce8;
+  --purple-l:#a78bfa;
+  --green:#3ab54a;
+  --green-l:#73CC80;
+  --orange:#f97316;
+  --teal:#0ea5a0;
+  --amber:#f59e0b;
+  --pink:#ec4899;
+  --bg:#f0f4ff;
+  --white:#ffffff;
+  --card-bg:#f8faff;
+  --text:#1a1f6e;
+  --muted:#6b7280;
+  --border:rgba(124,92,232,0.12);
+  --shadow:0 4px 24px rgba(124,92,232,0.10);
+  --shadow-lg:0 8px 40px rgba(124,92,232,0.15);
 }
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Nunito',sans-serif;background:#f5f9f0;color:var(--text);min-height:100vh;overflow-x:hidden}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-/* HEADER */
-header{
-  background:rgba(245,249,240,0.95);backdrop-filter:blur(12px);
+/* ── ARKA PLAN ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 600px 400px at 80% 10%, rgba(124,92,232,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 10% 80%, rgba(58,181,74,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 300px 300px at 50% 50%, rgba(249,115,22,0.04) 0%, transparent 60%);
+}
+
+/* ── NAVBAR ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);
   border-bottom:1px solid var(--border);
-  padding:0 5%;display:flex;align-items:center;justify-content:space-between;
-  height:64px;position:sticky;top:0;z-index:100;
+  padding:0 5%;display:flex;align-items:center;height:70px;gap:0;
+  box-shadow:0 2px 16px rgba(124,92,232,0.06);
 }
-.logo{font-size:1.2rem;font-weight:900;display:flex;align-items:center;gap:10px;color:var(--green-600)}
-.logo-icon{width:36px;height:36px;border-radius:10px;background:var(--green-400);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
-.header-badge{
-  background:var(--green-50);border:1px solid var(--green-100);
-  color:var(--green-600);font-size:.75rem;font-weight:700;
-  padding:5px 12px;border-radius:20px;
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto}
+.nav-logo-icon{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--purple),var(--navy));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;box-shadow:0 3px 10px rgba(124,92,232,0.3);
 }
-#header-age-badge{display:none}
+.nav-logo-text{font-family:'Nunito',sans-serif;font-size:1.4rem;font-weight:900;color:var(--navy)}
+.nav-logo-text span{color:var(--purple)}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{
+  font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;color:var(--muted);
+  text-decoration:none;padding:8px 14px;border-radius:10px;transition:.2s;
+}
+.nav-link:hover{color:var(--purple);background:rgba(124,92,232,0.06)}
+.nav-link.active{
+  color:var(--purple);background:rgba(124,92,232,0.1);
+}
+.nav-link.active-pill{
+  background:var(--purple);color:#fff;
+  box-shadow:0 3px 10px rgba(124,92,232,0.3);
+  display:flex;align-items:center;gap:6px;
+}
+.nav-link.active-pill::before{content:'🏠';font-size:.85rem}
 
-/* YAŞ SEÇİM EKRANI */
-#age-screen{
-  min-height:calc(100vh - 64px);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:40px 5%;
-  background:linear-gradient(160deg,var(--green-50) 0%,#f5f9f0 50%,var(--purple-50) 100%);
+/* ── HERO ── */
+.hero{
+  position:relative;z-index:1;
+  padding:64px 5% 48px;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;gap:40px;
+  max-width:1200px;margin:0 auto;
 }
-.age-title{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:900;color:var(--green-600);text-align:center;margin-bottom:8px;letter-spacing:-0.5px}
-.age-subtitle{font-size:1rem;color:var(--muted);text-align:center;margin-bottom:48px}
-.age-cards{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;max-width:700px}
-.age-card{
-  flex:1;min-width:260px;max-width:320px;
-  border-radius:var(--radius-xl);padding:32px 28px;
-  cursor:pointer;transition:transform .2s,box-shadow .2s;
-  border:2px solid transparent;position:relative;overflow:hidden;
+.hero-left{max-width:520px}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(58,181,74,0.12);border:1px solid rgba(58,181,74,0.25);
+  color:var(--green);font-size:.8rem;font-weight:800;font-family:'Nunito',sans-serif;
+  padding:6px 14px;border-radius:20px;margin-bottom:20px;letter-spacing:.3px;
 }
-.age-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.1)}
-.age-card.young{background:var(--blue-50);border-color:#B5D4F4}
-.age-card.older{background:var(--green-50);border-color:var(--green-100)}
-.age-card-emoji{font-size:3rem;margin-bottom:16px;display:block}
-.age-card h2{font-size:1.5rem;font-weight:900;margin-bottom:6px}
-.age-card.young h2{color:var(--blue-600)}
-.age-card.older h2{color:var(--green-600)}
-.age-card p{font-size:.9rem;line-height:1.6;margin-bottom:20px}
-.age-card.young p{color:#185FA5}
-.age-card.older p{color:var(--muted)}
-.age-card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
-.age-tag{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px}
-.age-card.young .age-tag{background:#B5D4F4;color:#0C447C}
-.age-card.older .age-tag{background:var(--green-100);color:var(--green-800)}
-.age-btn{
-  width:100%;padding:12px;border-radius:var(--radius-md);border:none;
-  font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;
-  cursor:pointer;transition:.2s;
+.hero-tag::before{content:'✦';color:var(--green)}
+.hero-h1{
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(2.4rem,4.5vw,3.6rem);
+  font-weight:900;line-height:1.1;letter-spacing:-0.5px;
+  margin-bottom:16px;
 }
-.age-card.young .age-btn{background:var(--blue-400);color:#fff}
-.age-card.older .age-btn{background:var(--green-400);color:#fff}
-.age-btn:hover{opacity:.88;transform:scale(1.02)}
+.hero-h1 .l1{color:var(--navy)}
+.hero-h1 .l2{color:var(--purple);position:relative;display:inline-block}
+.hero-h1 .l2::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--purple),var(--purple-l));
+  border-radius:2px;
+}
+.hero-h1 .l3{color:var(--green)}
+.hero-p{font-size:1.05rem;color:var(--muted);line-height:1.7;margin-bottom:28px;font-weight:600}
+.hero-btns{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--purple),#5b21b6);
+  color:#fff;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;
+  padding:14px 28px;border-radius:14px;border:none;cursor:pointer;
+  text-decoration:none;transition:.2s;
+  box-shadow:0 4px 16px rgba(124,92,232,0.35);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(124,92,232,0.45)}
+.btn-primary::before{content:'🚀';font-size:1rem}
 
-/* ANA PLATFORM */
-#platform{display:none}
-.platform-hero{
-  background:linear-gradient(135deg,var(--green-50) 0%,var(--purple-50) 100%);
-  padding:48px 5% 40px;border-bottom:1px solid var(--border);
+/* ── ROBOT / HERO GÖRSEL ── */
+.hero-right{
+  display:flex;justify-content:center;align-items:center;
+  position:relative;
 }
-.platform-hero h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;color:var(--green-600);margin-bottom:6px;letter-spacing:-0.3px}
-.platform-hero p{font-size:1rem;color:var(--muted)}
-.change-age{
-  margin-top:12px;background:none;border:1px solid var(--green-100);
-  border-radius:20px;padding:5px 14px;font-family:'Nunito',sans-serif;
-  font-size:.78rem;font-weight:700;color:var(--muted);cursor:pointer;transition:.2s;
+.robot-wrap{
+  position:relative;width:380px;height:380px;
+  display:flex;align-items:center;justify-content:center;
 }
-.change-age:hover{background:var(--green-50);color:var(--green-600)}
+.robot-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse,rgba(124,92,232,0.08) 0%,transparent 70%);
+  border-radius:50%;
+}
+.robot-img{
+  width:300px;height:300px;object-fit:contain;
+  filter:drop-shadow(0 20px 40px rgba(124,92,232,0.2));
+  animation:float 3s ease-in-out infinite;
+  position:relative;z-index:1;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 
-/* MENÜ */
-.menu-wrap{padding:0 5%;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:64px;z-index:90}
-.menu-tabs{display:flex;gap:4px;overflow-x:auto;padding:8px 0;scrollbar-width:none}
-.menu-tabs::-webkit-scrollbar{display:none}
-.menu-tab{
-  display:flex;align-items:center;gap:7px;
-  padding:9px 18px;border-radius:var(--radius-md);
-  font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;
-  cursor:pointer;border:none;background:none;color:#888;
-  white-space:nowrap;transition:.2s;flex-shrink:0;
+/* Dekoratif balonlar */
+.bubble{
+  position:absolute;background:#fff;border-radius:16px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;animation:float 3s ease-in-out infinite;
 }
-.menu-tab:hover{background:#f5f9f0;color:var(--green-600)}
-.menu-tab.active{color:#fff}
-.menu-tab .tab-icon{font-size:1rem}
+.b1{width:56px;height:56px;top:30px;left:20px;animation-delay:.5s;background:rgba(124,92,232,0.1)}
+.b2{width:52px;height:52px;top:40px;right:20px;animation-delay:1s;background:rgba(58,181,74,0.1)}
+.b3{width:48px;height:48px;bottom:60px;right:10px;animation-delay:1.5s;background:rgba(14,165,160,0.1)}
+.b4{width:48px;height:48px;bottom:80px;left:20px;animation-delay:.8s;background:rgba(249,115,22,0.1)}
 
-/* İÇERİK */
-.content-wrap{padding:32px 5% 60px;max-width:1100px}
-.section-panel{display:none}
-.section-panel.active{display:block}
-
-/* KARTLAR — 8-10 YAŞ */
-.grid-young{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
-.card-young{
-  border-radius:var(--radius-xl);padding:28px 22px;
-  cursor:pointer;transition:transform .2s,box-shadow .2s;
-  border:2px solid transparent;text-align:center;
+/* ── "NEYİ KEŞFETMEk İSTERSİN?" ── */
+.discover{
+  position:relative;z-index:1;
+  max-width:1200px;margin:0 auto;padding:0 5% 64px;
 }
-.card-young:hover{transform:translateY(-5px);box-shadow:0 12px 32px rgba(0,0,0,0.1)}
-.card-young-emoji{font-size:2.8rem;margin-bottom:14px;display:block}
-.card-young h3{font-size:1.1rem;font-weight:800;margin-bottom:8px}
-.card-young p{font-size:.85rem;line-height:1.5;margin-bottom:16px}
-.card-young-btn{
-  display:inline-block;padding:8px 20px;border-radius:20px;
-  font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;
-  border:none;cursor:pointer;transition:.2s;
+.discover-title{
+  text-align:center;
+  font-family:'Nunito',sans-serif;font-size:1.5rem;font-weight:900;
+  color:var(--navy);margin-bottom:32px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
 }
-.card-young-btn:hover{opacity:.85;transform:scale(1.04)}
-
-/* KARTLAR — 11-13 YAŞ */
-.grid-older{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.card-older{
-  background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);
-  padding:22px;cursor:pointer;transition:transform .15s,border-color .15s;
+.discover-title::before,.discover-title::after{
+  content:'';flex:1;max-width:80px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--purple-l));
+  border-radius:1px;
 }
-.card-older:hover{transform:translateY(-3px)}
-.card-label{font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px}
-.card-older h3{font-size:1rem;font-weight:800;margin-bottom:6px;line-height:1.3}
-.card-older p{font-size:.85rem;color:var(--muted);line-height:1.6}
-.card-arrow{margin-top:12px;font-size:.82rem;font-weight:700;opacity:.5}
+.discover-title::after{background:linear-gradient(90deg,var(--purple-l),transparent)}
 
-/* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,20,5,.75);z-index:200;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;backdrop-filter:blur(4px)}
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:16px;
+}
+.subject-card{
+  background:#fff;border-radius:20px;padding:24px 16px;text-align:center;
+  border:1.5px solid var(--border);
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  cursor:pointer;position:relative;overflow:hidden;
+}
+.subject-card::before{
+  content:'';position:absolute;inset:0;opacity:0;transition:.2s;
+}
+.subject-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+.subject-card:hover::before{opacity:1}
+
+.sc-scratch::before{background:radial-gradient(ellipse at top,rgba(249,115,22,0.06),transparent)}
+.sc-scratch:hover{border-color:rgba(249,115,22,0.3)}
+.sc-arduino::before{background:radial-gradient(ellipse at top,rgba(14,165,160,0.06),transparent)}
+.sc-arduino:hover{border-color:rgba(14,165,160,0.3)}
+.sc-tinkercad::before{background:radial-gradient(ellipse at top,rgba(245,158,11,0.06),transparent)}
+.sc-tinkercad:hover{border-color:rgba(245,158,11,0.3)}
+.sc-algoritma::before{background:radial-gradient(ellipse at top,rgba(249,115,22,0.06),transparent)}
+.sc-algoritma:hover{border-color:rgba(249,115,22,0.3)}
+.sc-yapayzeka::before{background:radial-gradient(ellipse at top,rgba(124,92,232,0.06),transparent)}
+.sc-yapayzeka:hover{border-color:rgba(124,92,232,0.3)}
+
+.card-icon-wrap{
+  width:72px;height:72px;border-radius:20px;margin:0 auto 14px;
+  display:flex;align-items:center;justify-content:center;font-size:2rem;
+}
+.ci-scratch{background:#fff3e6}
+.ci-arduino{background:#e0f5f4}
+.ci-tinkercad{background:#fef3c7}
+.ci-algoritma{background:#fff3e6}
+.ci-yapayzeka{background:#ede9fe}
+
+.card-icon-img{width:48px;height:48px;object-fit:contain}
+.card-name{
+  font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:900;
+  margin-bottom:6px;
+}
+.card-desc{font-size:.8rem;color:var(--muted);line-height:1.5;margin-bottom:16px;font-weight:600}
+.card-btn{
+  width:36px;height:36px;border-radius:50%;border:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:.9rem;cursor:pointer;transition:.2s;color:#fff;font-weight:800;
+}
+.card-btn:hover{transform:scale(1.1)}
+.cb-scratch{background:linear-gradient(135deg,#f97316,#ea580c)}
+.cb-arduino{background:linear-gradient(135deg,#0ea5a0,#0d9488)}
+.cb-tinkercad{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.cb-algoritma{background:linear-gradient(135deg,#f97316,#ea580c)}
+.cb-yapayzeka{background:linear-gradient(135deg,#7c5ce8,#6d28d9)}
+
+/* ── ÖZELLİKLER ── */
+.features{
+  background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:36px 5%;position:relative;z-index:1;
+}
+.features-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+}
+.feat{display:flex;align-items:flex-start;gap:12px}
+.feat-icon{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+}
+.fi-1{background:#ede9fe}
+.fi-2{background:#dcfce7}
+.fi-3{background:#dbeafe}
+.fi-4{background:#fff3e6}
+.feat-title{font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;color:var(--navy);margin-bottom:3px}
+.feat-desc{font-size:.78rem;color:var(--muted);line-height:1.5;font-weight:600}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,31,110,.6);z-index:200;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;backdrop-filter:blur(4px)}
 .modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:var(--radius-xl);width:100%;max-width:680px;padding:36px;position:relative;margin:auto;animation:fadeUp .25s ease}
+.modal{background:#fff;border-radius:24px;width:100%;max-width:680px;padding:36px;position:relative;margin:auto;animation:fadeUp .25s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.modal-close{position:absolute;top:16px;right:16px;background:#f5f9f0;border:none;width:32px;height:32px;border-radius:8px;font-size:1.1rem;cursor:pointer;color:var(--muted);transition:.2s;display:flex;align-items:center;justify-content:center}
-.modal-close:hover{background:var(--green-50);color:var(--green-600)}
-.modal-tag{font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px}
-.modal h2{font-size:1.5rem;font-weight:900;margin-bottom:6px;line-height:1.2;color:var(--text)}
-.modal-kisa{font-size:.9rem;color:var(--muted);margin-bottom:0}
-.modal-section{margin-top:22px}
-.modal-section-title{font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.modal p.anlatim{font-size:.95rem;color:#444;line-height:1.8}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--bg);border:none;width:32px;height:32px;border-radius:8px;font-size:1.1rem;cursor:pointer;color:var(--muted);transition:.2s;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:rgba(124,92,232,.1);color:var(--purple)}
+.modal-tag{font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;font-family:'Nunito',sans-serif}
+.modal h2{font-family:'Nunito',sans-serif;font-size:1.5rem;font-weight:900;margin-bottom:6px;line-height:1.2;color:var(--navy)}
+.modal-kisa{font-size:.9rem;color:var(--muted);font-weight:600}
+.modal-section{margin-top:20px}
+.modal-sec-title{font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-family:'Nunito',sans-serif}
+.modal p.anlatim{font-size:.95rem;color:#444;line-height:1.8;font-weight:600}
 .adim-list{list-style:none;display:flex;flex-direction:column;gap:8px}
-.adim-list li{display:flex;gap:12px;align-items:flex-start;background:#f5f9f0;border-radius:10px;padding:10px 14px;font-size:.88rem;line-height:1.5}
-.adim-no{font-weight:900;font-size:.85rem;min-width:22px;margin-top:1px}
-.modal-video{margin-top:14px;border-radius:var(--radius-lg);overflow:hidden;aspect-ratio:16/9;background:#000}
+.adim-list li{display:flex;gap:12px;align-items:flex-start;background:var(--bg);border-radius:10px;padding:10px 14px;font-size:.88rem;line-height:1.5;font-weight:600}
+.adim-no{font-family:'Nunito',sans-serif;font-weight:900;font-size:.85rem;min-width:22px;margin-top:1px}
+.modal-video{margin-top:14px;border-radius:16px;overflow:hidden;aspect-ratio:16/9;background:#000}
 .modal-video iframe{width:100%;height:100%;border:none}
 .modal-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-.modal-btn{display:inline-flex;align-items:center;gap:6px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;padding:10px 20px;border-radius:20px;border:none;cursor:pointer;text-decoration:none;transition:opacity .2s}
-.modal-btn:hover{opacity:.85}
+.modal-btn{display:inline-flex;align-items:center;gap:6px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;padding:10px 20px;border-radius:20px;border:none;cursor:pointer;text-decoration:none;transition:opacity .2s,transform .15s;color:#fff}
+.modal-btn:hover{opacity:.88;transform:scale(1.03)}
 
 /* HATA */
-.hata{text-align:center;padding:60px 20px;background:#fff;border-radius:var(--radius-xl);border:1px solid var(--border)}
-.hata h2{font-size:1.2rem;font-weight:800;margin-bottom:10px;color:var(--green-600)}
-.hata p{font-size:.88rem;color:var(--muted);line-height:1.7}
-.hata code{background:#f5f9f0;padding:2px 8px;border-radius:4px;font-size:.82rem}
+.hata{text-align:center;padding:60px 20px;background:#fff;border-radius:20px;border:1px solid var(--border);margin:0 5%}
+.hata h2{font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:900;margin-bottom:10px;color:var(--purple)}
+.hata p{font-size:.88rem;color:var(--muted);line-height:1.7;font-weight:600}
+.hata code{background:var(--bg);padding:2px 8px;border-radius:4px;font-size:.82rem}
 
-footer{border-top:1px solid var(--border);padding:24px 5%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.8rem;color:var(--muted);background:#fff}
+footer{
+  position:relative;z-index:1;
+  background:#fff;border-top:1px solid var(--border);
+  padding:24px 5%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-size:.82rem;color:var(--muted);font-weight:700;max-width:100%;
+}
+.footer-logo{font-family:'Nunito',sans-serif;font-weight:900;color:var(--navy);display:flex;align-items:center;gap:6px}
+.footer-logo span{color:var(--purple)}
 
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;text-align:center}
+  .hero-right{display:none}
+  .cards-grid{grid-template-columns:repeat(3,1fr)}
+  .features-inner{grid-template-columns:repeat(2,1fr)}
+  .hero-btns{justify-content:center}
+}
 @media(max-width:600px){
-  .age-cards{flex-direction:column}
-  .age-card{min-width:0;max-width:100%}
-  .modal{padding:24px 18px}
-  .content-wrap{padding:20px 4% 40px}
+  .cards-grid{grid-template-columns:repeat(2,1fr)}
+  .features-inner{grid-template-columns:1fr}
+  nav{padding:0 4%}
+  .nav-links{gap:2px}
+  .nav-link{padding:7px 10px;font-size:.8rem}
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">
-    <div class="logo-icon">🌱</div>
-    MiniYazılımcı
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">🤖</div>
+    <span class="nav-logo-text">kod<span>bino</span></span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active-pill" href="#">Ana Sayfa</a>
+    <a class="nav-link" href="#discover">Projeler</a>
+    <a class="nav-link" href="#discover">Dersler</a>
+    <a class="nav-link" href="#discover">Araçlar</a>
+    <a class="nav-link" href="#about">Hakkımızda</a>
   </div>
-  <div class="header-badge" id="header-age-badge"></div>
-</header>
+</nav>
 
-<!-- YAŞ SEÇİM -->
-<div id="age-screen">
-  <div class="age-title">Merhaba! 👋<br>Sen kaç yaşındasın?</div>
-  <div class="age-subtitle">Sana en uygun içerikleri gösterelim</div>
-  <div class="age-cards">
-    <div class="age-card young" onclick="yasSeç('young')">
-      <span class="age-card-emoji">🚀</span>
-      <h2>8–10 Yaş</h2>
-      <p>Kodlamanın eğlenceli dünyasına ilk adımını at!</p>
-      <div class="age-card-tags">
-        <span class="age-tag">Scratch</span>
-        <span class="age-tag">Blok Kod</span>
-        <span class="age-tag">Oyunlar</span>
-        <span class="age-tag">Animasyon</span>
-      </div>
-      <button class="age-btn">Başlayalım! 🎮</button>
-    </div>
-    <div class="age-card older" onclick="yasSeç('older')">
-      <span class="age-card-emoji">⚡</span>
-      <h2>11–13 Yaş</h2>
-      <p>Gerçek projeler yap, devreler kur, yapay zeka keşfet!</p>
-      <div class="age-card-tags">
-        <span class="age-tag">Arduino</span>
-        <span class="age-tag">Tinkercad</span>
-        <span class="age-tag">Algoritma</span>
-        <span class="age-tag">Yapay Zeka</span>
-      </div>
-      <button class="age-btn">Hadi Başla! ⚡</button>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">8–15 yaş arası kodlama platformu</div>
+    <h1 class="hero-h1">
+      <span class="l1">Hayal Et,</span><br>
+      <span class="l2">Kodla,</span><br>
+      <span class="l3">Geliştir!</span>
+    </h1>
+    <p class="hero-p">8–15 yaş arası çocuklar için eğlenceli<br>kodlama ve teknoloji platformu.</p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="#discover">Hemen Keşfet</a>
     </div>
   </div>
-</div>
 
-<!-- PLATFORM -->
-<div id="platform">
-  <div class="platform-hero">
-    <h1 id="platform-title">Merhaba!</h1>
-    <p id="platform-subtitle">Bugün ne öğrenmek istiyorsun?</p>
-    <button class="change-age" onclick="yasEkraninaGeri()">↩ Yaş grubunu değiştir</button>
+  <div class="hero-right">
+    <div class="robot-wrap">
+      <div class="robot-bg"></div>
+      <!-- Robot placeholder — kendi görselini buraya koy -->
+      <div style="width:280px;height:280px;border-radius:30px;background:linear-gradient(135deg,rgba(124,92,232,0.12),rgba(58,181,74,0.1));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;animation:float 3s ease-in-out infinite;position:relative;z-index:1;border:2px dashed rgba(124,92,232,0.2)">
+        <div style="font-size:5rem;filter:drop-shadow(0 8px 16px rgba(124,92,232,0.3))">🤖</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:800;color:var(--purple);opacity:.7">Robot görseli buraya gelecek</div>
+      </div>
+      <div class="bubble b1">💡</div>
+      <div class="bubble b2">⚡</div>
+      <div class="bubble b3">&lt;/&gt;</div>
+      <div class="bubble b4">🌱</div>
+    </div>
   </div>
-  <div class="menu-wrap">
-    <div class="menu-tabs" id="menu-tabs"></div>
-  </div>
-  <div class="content-wrap">
-    <div id="section-panels"></div>
-  </div>
-</div>
+</section>
 
-<footer>
-  <span id="footer-text">© 2026 MiniYazılımcı</span>
-  <span style="color:var(--green-400);font-weight:700">🌱 Birlikte öğreniyoruz!</span>
+<!-- NEYİ KEŞFETMEk İSTERSİN? -->
+<section class="discover" id="discover">
+  <div class="discover-title">Neyi Keşfetmek İstersin?</div>
+  <div class="cards-grid" id="cards-grid">
+    <!-- JS ile doldurulacak -->
+  </div>
+</section>
+
+<!-- ÖZELLİKLER -->
+<section class="features">
+  <div class="features-inner">
+    <div class="feat">
+      <div class="feat-icon fi-1">🎮</div>
+      <div>
+        <div class="feat-title">Eğlenerek Öğren</div>
+        <div class="feat-desc">Oyunlar ve projelerle öğrenmek çok keyifli!</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon fi-2">🏅</div>
+      <div>
+        <div class="feat-title">Rozetler Kazan</div>
+        <div class="feat-desc">Başarılarını rozetlerle taçlandır!</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon fi-3">👥</div>
+      <div>
+        <div class="feat-title">Topluluğa Katıl</div>
+        <div class="feat-desc">Arkadaşlarınla birlikte üret ve paylaş!</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon fi-4">🚀</div>
+      <div>
+        <div class="feat-title">Gelişimini Takip Et</div>
+        <div class="feat-desc">İlerlemeyi gör, hedeflerine ulaş!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="about">
+  <div class="footer-logo">kod<span>bino</span> 🌱</div>
+  <span id="footer-text">© 2026 Kodbino · Birlikte öğreniyoruz!</span>
 </footer>
 
 <!-- MODAL -->
@@ -248,211 +402,105 @@ footer{border-top:1px solid var(--border);padding:24px 5%;display:flex;justify-c
 
 <script src="icerikler.js"></script>
 <script>
-let _yas = localStorage.getItem('miniyazilimci_yas') || null;
-
-/* ── RENK & TEMA ── */
-const TEMA = {
-  young: {
-    hero_title: 'Hadi oynayalım! 🎮',
-    hero_sub: 'Bugün hangi projeyi yapacaksın?',
-    badge: '8–10 Yaş 🚀',
-    badge_bg: '#B5D4F4', badge_color: '#0C447C',
-  },
-  older: {
-    hero_title: 'Bugün ne inşa ediyoruz? ⚡',
-    hero_sub: 'Projelerini seç, öğren, yap!',
-    badge: '11–13 Yaş ⚡',
-    badge_bg: '#C0DD97', badge_color: '#27500A',
-  }
+const KART = {
+  scratch:   {renk:'#f97316',bg:'#fff3e6',ikon:'ci-scratch',btn:'cb-scratch',emoji:'🐱',isim:'Scratch'},
+  tinkercad: {renk:'#f59e0b',bg:'#fef3c7',ikon:'ci-tinkercad',btn:'cb-tinkercad',emoji:'🔧',isim:'Tinkercad'},
+  arduino:   {renk:'#0ea5a0',bg:'#e0f5f4',ikon:'ci-arduino',btn:'cb-arduino',emoji:'⚡',isim:'Arduino'},
+  algoritma: {renk:'#f97316',bg:'#fff3e6',ikon:'ci-algoritma',btn:'cb-algoritma',emoji:'🧩',isim:'Algoritma'},
+  yapay_zeka:{renk:'#7c5ce8',bg:'#ede9fe',ikon:'ci-yapayzeka',btn:'cb-yapayzeka',emoji:'🤖',isim:'Yapay Zeka'},
 };
-
-const BOLUM_RENK = {
-  scratch:   {bg:'#E6F1FB',border:'#B5D4F4',btn:'#378ADD',btnT:'#fff',label:'#185FA5',dot:'#378ADD'},
-  tinkercad: {bg:'#FAEEDA',border:'#FAC775',btn:'#BA7517',btnT:'#fff',label:'#854F0B',dot:'#EF9F27'},
-  arduino:   {bg:'#EAF3DE',border:'#C0DD97',btn:'#639922',btnT:'#fff',label:'#3B6D11',dot:'#639922'},
-  algoritma: {bg:'#EEEDFE',border:'#CECBF6',btn:'#7F77DD',btnT:'#fff',label:'#534AB7',dot:'#7F77DD'},
-  yapay_zeka:{bg:'#FBEAF0',border:'#F4C0D1',btn:'#D4537E',btnT:'#fff',label:'#993556',dot:'#D4537E'},
-};
-
-const BOLUM_EMOJI = {
-  scratch:'🐱', tinkercad:'🔧', arduino:'⚡', algoritma:'🧩', yapay_zeka:'🤖'
+const ACIKLAMA = {
+  scratch:   'Kendi oyunlarını ve animasyonlarını yap!',
+  tinkercad: '3D tasarla ve simülasyon yap!',
+  arduino:   'Elektronik projeler geliştir!',
+  algoritma: 'Mantığını geliştir, problemleri çöz!',
+  yapay_zeka:'Geleceğin teknolojisini keşfet!',
 };
 
 function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML}
 
-/* ── YAŞ SEÇİMİ ── */
-window.addEventListener('load', () => {
-  if(typeof ICERIK === 'undefined'){ hataGoster(); return; }
-  if(_yas) platformGoster(_yas);
+window.addEventListener('load',()=>{
+  if(typeof ICERIK==='undefined'){hataGoster();return;}
+  kartsGoster();
+  if(ICERIK.site?.footer) document.getElementById('footer-text').textContent=ICERIK.site.footer;
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')kapatModal(null,true)});
 });
 
-function yasSeç(yas) {
-  _yas = yas;
-  localStorage.setItem('miniyazilimci_yas', yas);
-  platformGoster(yas);
-}
-
-function platformGoster(yas) {
-  if(typeof ICERIK === 'undefined'){ hataGoster(); return; }
-  document.getElementById('age-screen').style.display = 'none';
-  document.getElementById('platform').style.display = 'block';
-  const t = TEMA[yas];
-  document.getElementById('platform-title').textContent = t.hero_title;
-  document.getElementById('platform-subtitle').textContent = t.hero_sub;
-  const badge = document.getElementById('header-age-badge');
-  badge.textContent = t.badge;
-  badge.style.display = 'block';
-  badge.style.background = t.badge_bg;
-  badge.style.color = t.badge_color;
-  badge.style.border = `1px solid ${t.badge_bg}`;
-  menuOlustur(yas);
-  document.addEventListener('keydown', e => { if(e.key==='Escape') kapatModal(null,true); });
-}
-
-function yasEkraninaGeri() {
-  document.getElementById('platform').style.display = 'none';
-  document.getElementById('age-screen').style.display = 'flex';
-  document.getElementById('header-age-badge').style.display = 'none';
-  localStorage.removeItem('miniyazilimci_yas');
-  _yas = null;
-}
-
-/* ── MENÜ ── */
-function menuOlustur(yas) {
-  const menular = ICERIK.menuler || [];
-  const tabs = document.getElementById('menu-tabs');
-  const panels = document.getElementById('section-panels');
-  tabs.innerHTML = ''; panels.innerHTML = '';
-
-  menular.filter(m => m.aktif !== false).forEach((m, i) => {
-    const r = BOLUM_RENK[m.id] || BOLUM_RENK.scratch;
-    const btn = document.createElement('button');
-    btn.className = 'menu-tab' + (i===0?' active':'');
-    btn.dataset.id = m.id;
-    btn.style.cssText = i===0 ? `background:${r.btn};color:#fff` : '';
-    btn.innerHTML = `<span class="tab-icon">${BOLUM_EMOJI[m.id]||'📌'}</span>${esc(m.baslik)}`;
-    btn.onclick = () => tabGec(m.id);
-    tabs.appendChild(btn);
-
-    const panel = document.createElement('div');
-    panel.className = 'section-panel' + (i===0?' active':'');
-    panel.id = 'panel-' + m.id;
-    panel.appendChild(bolumIcerik(m.id, yas));
-    panels.appendChild(panel);
-  });
-}
-
-function tabGec(id) {
-  const r = BOLUM_RENK[id] || BOLUM_RENK.scratch;
-  document.querySelectorAll('.menu-tab').forEach(b => {
-    const isActive = b.dataset.id === id;
-    b.classList.toggle('active', isActive);
-    b.style.background = isActive ? r.btn : '';
-    b.style.color = isActive ? '#fff' : '';
-  });
-  document.querySelectorAll('.section-panel').forEach(p => p.classList.toggle('active', p.id==='panel-'+id));
-}
-
-/* ── BÖLÜM İÇERİK ── */
-function bolumIcerik(id, yas) {
-  const r = BOLUM_RENK[id] || BOLUM_RENK.scratch;
-  const liste = ICERIK['bolumler']?.[id] || [];
-  const div = document.createElement('div');
-
-  if(!liste.length) {
-    div.innerHTML = `<div style="color:var(--muted);padding:40px 0;text-align:center;font-size:.9rem">Henüz içerik eklenmedi.</div>`;
-    return div;
-  }
-
-  if(yas === 'young') {
-    const grid = document.createElement('div'); grid.className = 'grid-young';
-    liste.forEach(item => {
-      const k = document.createElement('div');
-      k.className = 'card-young';
-      k.style.cssText = `background:${r.bg};border-color:${r.border}`;
-      k.innerHTML = `
-        <span class="card-young-emoji">${item.emoji||BOLUM_EMOJI[id]||'📌'}</span>
-        <h3 style="color:${r.label}">${esc(item.baslik)}</h3>
-        <p>${esc(item.kisa_aciklama)}</p>
-        <button class="card-young-btn" style="background:${r.btn};color:${r.btnT}">Hadi Başla! →</button>`;
-      k.onclick = () => acModal(id, item);
-      grid.appendChild(k);
-    });
-    div.appendChild(grid);
-  } else {
-    const grid = document.createElement('div'); grid.className = 'grid-older';
-    liste.forEach(item => {
-      const k = document.createElement('div');
-      k.className = 'card-older';
-      k.style.cssText = `border-left:3px solid ${r.btn}`;
-      k.addEventListener('mouseenter', () => k.style.borderColor = r.btn);
-      k.innerHTML = `
-        <div class="card-label" style="color:${r.label}">${BOLUM_EMOJI[id]||'📌'} ${esc(item.baslik)}</div>
-        <h3>${esc(item.baslik)}</h3>
-        <p>${esc(item.kisa_aciklama)}</p>
-        <div class="card-arrow" style="color:${r.btn}">Detayları gör →</div>`;
-      k.onclick = () => acModal(id, item);
-      grid.appendChild(k);
-    });
-    div.appendChild(grid);
-  }
-  return div;
-}
-
-/* ── MODAL ── */
-function acModal(id, veri) {
-  const r = BOLUM_RENK[id] || BOLUM_RENK.scratch;
-  let adimHTML = '';
-  if(veri.adimlar?.length) adimHTML = `
-    <div class="modal-section">
-      <div class="modal-section-title">Adım Adım</div>
-      <ul class="adim-list">${veri.adimlar.map((a,i)=>`
-        <li><span class="adim-no" style="color:${r.btn}">${i+1}.</span><span>${esc(a)}</span></li>`).join('')}
-      </ul>
+function kartsGoster(){
+  const menuler=(ICERIK.menuler||[]).filter(m=>m.aktif!==false).sort((a,b)=>a.sira-b.sira);
+  const grid=document.getElementById('cards-grid');
+  grid.innerHTML=menuler.map(m=>{
+    const k=KART[m.id]||{renk:'#7c5ce8',bg:'#ede9fe',ikon:'ci-yapayzeka',btn:'cb-yapayzeka',emoji:'📌',isim:m.baslik};
+    const ac=ACIKLAMA[m.id]||'Keşfet!';
+    return `<div class="subject-card sc-${m.id}" onclick="bolumAc('${m.id}')">
+      <div class="card-icon-wrap ${k.ikon}">
+        <span style="font-size:2.2rem">${k.emoji}</span>
+      </div>
+      <div class="card-name" style="color:${k.renk}">${esc(m.baslik)}</div>
+      <div class="card-desc">${ac}</div>
+      <button class="card-btn ${k.btn}">→</button>
     </div>`;
-  let vidHTML = '';
-  if(veri.video_embed) vidHTML = `
+  }).join('');
+}
+
+function bolumAc(id){
+  const liste=(ICERIK.bolumler||{})[id]||[];
+  const k=KART[id]||{renk:'#7c5ce8',emoji:'📌',isim:id};
+  if(!liste.length){
+    alert('Bu bölümde henüz içerik yok.');return;
+  }
+  // İlk içeriği modal'da göster (basit versiyon — liste gösterimini ileride ekleyebiliriz)
+  acModal(id,liste[0]);
+}
+
+function acModal(id,veri){
+  const k=KART[id]||{renk:'#7c5ce8',emoji:'📌'};
+  let adimHTML='';
+  if(veri.adimlar?.length) adimHTML=`
     <div class="modal-section">
-      <div class="modal-section-title">Video Anlatım</div>
+      <div class="modal-sec-title">Adım Adım</div>
+      <ul class="adim-list">${veri.adimlar.map((a,i)=>`
+        <li><span class="adim-no" style="color:${k.renk}">${i+1}.</span><span>${esc(a)}</span></li>`).join('')}
+      </ul></div>`;
+  let vidHTML='';
+  if(veri.video_embed) vidHTML=`
+    <div class="modal-section">
+      <div class="modal-sec-title">Video</div>
       <div class="modal-video"><iframe src="${veri.video_embed}" allowfullscreen loading="lazy"></iframe></div>
     </div>`;
-  const linkler = [];
-  if(veri.scratch_link)   linkler.push(`<a class="modal-btn" style="background:${r.btn};color:${r.btnT}" href="${veri.scratch_link}" target="_blank">🐱 Scratch'te Aç ↗</a>`);
-  if(veri.tinkercad_link) linkler.push(`<a class="modal-btn" style="background:${r.btn};color:${r.btnT}" href="${veri.tinkercad_link}" target="_blank">🔧 Tinkercad'de Aç ↗</a>`);
-  if(veri.wokwi_link)     linkler.push(`<a class="modal-btn" style="background:${r.btn};color:${r.btnT}" href="${veri.wokwi_link}" target="_blank">⚡ Wokwi'de Aç ↗</a>`);
-  if(veri.pdf_link)       linkler.push(`<a class="modal-btn" style="background:${r.btn};color:${r.btnT}" href="${veri.pdf_link}" download>📄 PDF İndir</a>`);
-  const linkHTML = linkler.length ? `<div class="modal-section"><div class="modal-section-title">Bağlantılar</div><div class="modal-links">${linkler.join('')}</div></div>` : '';
+  const linkler=[];
+  if(veri.scratch_link)   linkler.push(`<a class="modal-btn" style="background:${k.renk}" href="${veri.scratch_link}" target="_blank">🐱 Scratch'te Aç</a>`);
+  if(veri.tinkercad_link) linkler.push(`<a class="modal-btn" style="background:${k.renk}" href="${veri.tinkercad_link}" target="_blank">🔧 Tinkercad'de Aç</a>`);
+  if(veri.wokwi_link)     linkler.push(`<a class="modal-btn" style="background:${k.renk}" href="${veri.wokwi_link}" target="_blank">⚡ Wokwi'de Aç</a>`);
+  if(veri.pdf_link)       linkler.push(`<a class="modal-btn" style="background:${k.renk}" href="${veri.pdf_link}" download>📄 PDF İndir</a>`);
+  const linkHTML=linkler.length?`<div class="modal-section"><div class="modal-sec-title">Bağlantılar</div><div class="modal-links">${linkler.join('')}</div></div>`:'';
 
-  document.getElementById('modal-content').innerHTML = `
-    <div class="modal-tag" style="color:${r.label}">${BOLUM_EMOJI[id]||'📌'} ${ICERIK.menuler?.find(m=>m.id===id)?.baslik||id}</div>
+  document.getElementById('modal-content').innerHTML=`
+    <div class="modal-tag" style="color:${k.renk}">${k.emoji} ${KART[id]?.isim||id}</div>
     <h2>${esc(veri.baslik)}</h2>
-    <p class="modal-kisa" style="margin-top:4px;color:var(--muted)">${esc(veri.kisa_aciklama)}</p>
+    <p class="modal-kisa">${esc(veri.kisa_aciklama)}</p>
     <div class="modal-section">
-      <div class="modal-section-title">Konu Anlatımı</div>
+      <div class="modal-sec-title">Konu Anlatımı</div>
       <p class="anlatim">${esc(veri.konu_anlatimi)}</p>
     </div>
     ${adimHTML}${vidHTML}${linkHTML}`;
-
   document.getElementById('modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow='hidden';
 }
 
-function kapatModal(e, force) {
-  if(force||(e&&e.target===document.getElementById('modal-overlay'))) {
+function kapatModal(e,force){
+  if(force||(e&&e.target===document.getElementById('modal-overlay'))){
     document.getElementById('modal-overlay').classList.remove('open');
-    document.body.style.overflow = '';
+    document.body.style.overflow='';
   }
 }
 
-function hataGoster() {
-  document.getElementById('age-screen').style.display = 'none';
-  document.getElementById('platform').style.display = 'block';
-  document.getElementById('section-panels').innerHTML = `
-    <div class="hata">
+function hataGoster(){
+  document.getElementById('cards-grid').innerHTML=`
+    <div class="hata" style="grid-column:1/-1">
       <h2>icerikler.js bulunamadı</h2>
-      <p>Admin panelinden (<code>admin.html</code>) giriş yap,<br>
-      <strong>Dışa Aktar</strong> bölümünden <code>icerikler.js</code> dosyasını indir<br>
-      ve bu dosyayla aynı klasöre koy.</p>
+      <p>Admin panelinden (<code>admin.html</code>) <strong>Dışa Aktar</strong> bölümünden<br>
+      <code>icerikler.js</code> dosyasını indirip aynı klasöre koy.</p>
     </div>`;
 }
 </script>

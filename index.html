@@ -4,417 +4,575 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kodbino — Hayal Et, Kodla, Geliştir!</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --navy:#1a1f6e;
-  --purple:#7c5ce8;
-  --purple-l:#a78bfa;
-  --green:#3ab54a;
-  --green-l:#73CC80;
-  --orange:#f97316;
-  --teal:#0ea5a0;
-  --amber:#f59e0b;
-  --pink:#ec4899;
-  --bg:#f0f4ff;
-  --white:#ffffff;
-  --card-bg:#f8faff;
-  --text:#1a1f6e;
-  --muted:#6b7280;
-  --border:rgba(124,92,232,0.12);
-  --shadow:0 4px 24px rgba(124,92,232,0.10);
-  --shadow-lg:0 8px 40px rgba(124,92,232,0.15);
-}
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-
-/* ── ARKA PLAN ── */
-body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:
-    radial-gradient(ellipse 600px 400px at 80% 10%, rgba(124,92,232,0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 400px 300px at 10% 80%, rgba(58,181,74,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 300px 300px at 50% 50%, rgba(249,115,22,0.04) 0%, transparent 60%);
-}
-
-/* ── NAVBAR ── */
-nav{
-  position:sticky;top:0;z-index:100;
-  background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border);
-  padding:0 5%;display:flex;align-items:center;height:70px;gap:0;
-  box-shadow:0 2px 16px rgba(124,92,232,0.06);
-}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto}
-.nav-logo-icon{
-  width:42px;height:42px;border-radius:12px;
-  background:linear-gradient(135deg,var(--purple),var(--navy));
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;box-shadow:0 3px 10px rgba(124,92,232,0.3);
-}
-.nav-logo-text{font-family:'Nunito',sans-serif;font-size:1.4rem;font-weight:900;color:var(--navy)}
-.nav-logo-text span{color:var(--purple)}
-.nav-links{display:flex;align-items:center;gap:4px}
-.nav-link{
-  font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;color:var(--muted);
-  text-decoration:none;padding:8px 14px;border-radius:10px;transition:.2s;
-}
-.nav-link:hover{color:var(--purple);background:rgba(124,92,232,0.06)}
-.nav-link.active{
-  color:var(--purple);background:rgba(124,92,232,0.1);
-}
-.nav-link.active-pill{
-  background:var(--purple);color:#fff;
-  box-shadow:0 3px 10px rgba(124,92,232,0.3);
-  display:flex;align-items:center;gap:6px;
-}
-.nav-link.active-pill::before{content:'🏠';font-size:.85rem}
-
-/* ── HERO ── */
-.hero{
-  position:relative;z-index:1;
-  padding:64px 5% 48px;
-  display:grid;grid-template-columns:1fr 1fr;
-  align-items:center;gap:40px;
-  max-width:1200px;margin:0 auto;
-}
-.hero-left{max-width:520px}
-.hero-tag{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(58,181,74,0.12);border:1px solid rgba(58,181,74,0.25);
-  color:var(--green);font-size:.8rem;font-weight:800;font-family:'Nunito',sans-serif;
-  padding:6px 14px;border-radius:20px;margin-bottom:20px;letter-spacing:.3px;
-}
-.hero-tag::before{content:'✦';color:var(--green)}
-.hero-h1{
+body{
   font-family:'Nunito',sans-serif;
-  font-size:clamp(2.4rem,4.5vw,3.6rem);
-  font-weight:900;line-height:1.1;letter-spacing:-0.5px;
-  margin-bottom:16px;
+  background:linear-gradient(160deg,#eef2ff 0%,#f0f4ff 50%,#f5f0ff 100%);
+  min-height:100vh;overflow-x:hidden;
+  color:#1a1f6e;
 }
-.hero-h1 .l1{color:var(--navy)}
-.hero-h1 .l2{color:var(--purple);position:relative;display:inline-block}
-.hero-h1 .l2::after{
-  content:'';position:absolute;bottom:-4px;left:0;right:0;height:4px;
-  background:linear-gradient(90deg,var(--purple),var(--purple-l));
-  border-radius:2px;
-}
-.hero-h1 .l3{color:var(--green)}
-.hero-p{font-size:1.05rem;color:var(--muted);line-height:1.7;margin-bottom:28px;font-weight:600}
-.hero-btns{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.btn-primary{
-  display:inline-flex;align-items:center;gap:8px;
-  background:linear-gradient(135deg,var(--purple),#5b21b6);
-  color:#fff;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;
-  padding:14px 28px;border-radius:14px;border:none;cursor:pointer;
-  text-decoration:none;transition:.2s;
-  box-shadow:0 4px 16px rgba(124,92,232,0.35);
-}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(124,92,232,0.45)}
-.btn-primary::before{content:'🚀';font-size:1rem}
 
-/* ── ROBOT / HERO GÖRSEL ── */
-.hero-right{
-  display:flex;justify-content:center;align-items:center;
-  position:relative;
+/* ══ HEADER ══ */
+.header-outer{
+  padding:14px 24px;
+  display:flex;justify-content:center;
+  position:sticky;top:0;z-index:100;
+  background:rgba(238,242,255,0.8);
+  backdrop-filter:blur(16px);
 }
-.robot-wrap{
-  position:relative;width:380px;height:380px;
+.header-pill{
+  background:#fff;
+  border-radius:50px;
+  padding:8px 10px 8px 16px;
+  display:flex;align-items:center;gap:8px;
+  box-shadow:0 4px 24px rgba(100,80,200,0.13);
+  width:100%;max-width:980px;
+}
+
+/* Logo */
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;margin-right:auto;flex-shrink:0}
+.logo-icon{
+  width:38px;height:38px;border-radius:50%;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#ffe4b5,#ffd6ff);
+  border:1.5px solid rgba(200,180,255,0.3);
+  flex-shrink:0;
+}
+.logo-icon svg{width:32px;height:32px}
+.logo-wordmark{
+  font-size:1.4rem;font-weight:900;
+  letter-spacing:-0.5px;line-height:1;
+  display:flex;
+}
+.logo-kod{color:#1a1f6e}
+.logo-bino{
+  background:linear-gradient(90deg,#7B61FF,#4F9FFF);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+/* Nav */
+.nav{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.nav a{
+  font-size:.875rem;font-weight:700;color:#374151;
+  text-decoration:none;padding:8px 14px;border-radius:30px;transition:.15s;
+  white-space:nowrap;
+}
+.nav a:hover{color:#7B61FF;background:rgba(123,97,255,0.07)}
+.nav-active{
+  background:#7B61FF!important;color:#fff!important;
+  border-radius:30px;padding:8px 16px;
+  font-size:.875rem;font-weight:800;text-decoration:none;
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+  box-shadow:0 3px 12px rgba(123,97,255,0.3);
+}
+
+/* Giriş Yap */
+.btn-giris{
+  background:#7B61FF;color:#fff;border:none;border-radius:30px;
+  padding:9px 18px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;
+  cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;
+  box-shadow:0 3px 14px rgba(123,97,255,0.3);transition:.15s;
+  text-decoration:none;flex-shrink:0;margin-left:4px;
+}
+.btn-giris:hover{background:#6d28d9;transform:translateY(-1px)}
+.btn-giris svg{width:16px;height:16px;flex-shrink:0}
+
+/* ══ HERO ══ */
+.hero{
+  max-width:1100px;margin:0 auto;
+  padding:56px 40px 44px;
+  display:grid;grid-template-columns:1fr 480px;
+  align-items:center;gap:24px;
+}
+.hero-h1{
+  font-size:clamp(3rem,5vw,4.4rem);
+  font-weight:900;line-height:1.06;
+  letter-spacing:-1.5px;margin-bottom:6px;
+}
+.h-dark{color:#1a1f6e;display:block}
+.h-purple{color:#7B61FF;display:block;position:relative}
+.h-underline{
+  display:block;height:6px;width:170px;
+  background:linear-gradient(90deg,#f59e0b,#f97316);
+  border-radius:4px;margin-top:5px;
+}
+.h-green{color:#22c55e;display:block}
+
+.hero-sub{
+  font-size:1.02rem;font-weight:600;color:#6b7280;
+  line-height:1.65;margin:20px 0 30px;max-width:420px;
+}
+.hero-btns{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.btn-kesfet{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#7B61FF;color:#fff;
+  font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;
+  padding:14px 28px;border-radius:16px;border:none;cursor:pointer;
+  text-decoration:none;box-shadow:0 4px 18px rgba(123,97,255,.38);transition:.2s;
+}
+.btn-kesfet:hover{background:#6d28d9;transform:translateY(-2px);box-shadow:0 6px 24px rgba(123,97,255,.48)}
+.btn-kesfet-ico{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;
+}
+.btn-video{
+  display:inline-flex;align-items:center;gap:12px;
+  background:none;border:none;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;color:#1a1f6e;
+  text-decoration:none;
+}
+.btn-video-ico{
+  width:44px;height:44px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 14px rgba(0,0,0,.1);transition:.2s;flex-shrink:0;
+}
+.btn-video-ico svg{width:14px;height:14px;margin-left:3px}
+.btn-video:hover .btn-video-ico{box-shadow:0 4px 18px rgba(0,0,0,.15);transform:scale(1.06)}
+
+/* ══ ROBOT VISUAL ══ */
+.hero-right{display:flex;justify-content:center;align-items:center;position:relative}
+.robot-scene{
+  position:relative;width:460px;height:440px;
   display:flex;align-items:center;justify-content:center;
 }
-.robot-bg{
-  position:absolute;inset:0;
-  background:radial-gradient(ellipse,rgba(124,92,232,0.08) 0%,transparent 70%);
-  border-radius:50%;
+.robot-blob{
+  position:absolute;width:380px;height:360px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(123,97,255,.1) 0%,rgba(100,150,255,.07) 50%,transparent 75%);
 }
-.robot-img{
-  width:300px;height:300px;object-fit:contain;
-  filter:drop-shadow(0 20px 40px rgba(124,92,232,0.2));
-  animation:float 3s ease-in-out infinite;
-  position:relative;z-index:1;
+.robot-main{
+  position:relative;z-index:2;
+  animation:float 3.8s ease-in-out infinite;
 }
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.robot-main img{
+  width:320px;height:320px;object-fit:contain;
+  filter:drop-shadow(0 24px 48px rgba(123,97,255,.22));
+}
+.robot-emoji-fb{
+  width:290px;height:290px;display:none;
+  align-items:center;justify-content:center;flex-direction:column;gap:10px;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 
-/* Dekoratif balonlar */
-.bubble{
-  position:absolute;background:#fff;border-radius:16px;
-  box-shadow:0 4px 16px rgba(0,0,0,0.08);
+/* Dekoratif chip'ler */
+.deco{
+  position:absolute;background:#fff;border-radius:18px;
+  box-shadow:0 4px 18px rgba(0,0,0,.09);
   display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;animation:float 3s ease-in-out infinite;
+  font-size:1.3rem;font-weight:800;
+  animation:float 3.8s ease-in-out infinite;
+  z-index:3;padding:12px 14px;
 }
-.b1{width:56px;height:56px;top:30px;left:20px;animation-delay:.5s;background:rgba(124,92,232,0.1)}
-.b2{width:52px;height:52px;top:40px;right:20px;animation-delay:1s;background:rgba(58,181,74,0.1)}
-.b3{width:48px;height:48px;bottom:60px;right:10px;animation-delay:1.5s;background:rgba(14,165,160,0.1)}
-.b4{width:48px;height:48px;bottom:80px;left:20px;animation-delay:.8s;background:rgba(249,115,22,0.1)}
+.d1{top:24px;left:10px;animation-delay:.5s;background:rgba(123,97,255,.12);color:#7B61FF;font-size:1rem}
+.d2{top:40px;right:4px;animation-delay:1.1s;background:rgba(34,197,94,.12);font-size:1rem;color:#22c55e}
+.d3{bottom:64px;right:8px;animation-delay:1.7s;background:rgba(79,159,255,.12);color:#4F9FFF;font-size:.95rem}
+.d4{bottom:84px;left:4px;animation-delay:.8s;background:rgba(245,158,11,.12);color:#f59e0b;font-size:1rem}
 
-/* ── "NEYİ KEŞFETMEk İSTERSİN?" ── */
-.discover{
-  position:relative;z-index:1;
-  max-width:1200px;margin:0 auto;padding:0 5% 64px;
+/* ══ DISCOVER ══ */
+.discover{max-width:1100px;margin:0 auto;padding:0 40px 60px}
+.disc-title{
+  text-align:center;font-size:1.35rem;font-weight:900;color:#1a1f6e;
+  margin-bottom:32px;display:flex;align-items:center;justify-content:center;gap:10px;
 }
-.discover-title{
-  text-align:center;
-  font-family:'Nunito',sans-serif;font-size:1.5rem;font-weight:900;
-  color:var(--navy);margin-bottom:32px;
-  display:flex;align-items:center;justify-content:center;gap:10px;
-}
-.discover-title::before,.discover-title::after{
-  content:'';flex:1;max-width:80px;height:2px;
-  background:linear-gradient(90deg,transparent,var(--purple-l));
-  border-radius:1px;
-}
-.discover-title::after{background:linear-gradient(90deg,var(--purple-l),transparent)}
+.disc-line{width:56px;height:2.5px;background:linear-gradient(90deg,transparent,#7B61FF);border-radius:2px}
+.disc-line-r{background:linear-gradient(90deg,#7B61FF,transparent)}
+.disc-dot{width:8px;height:8px;border-radius:50%;background:#7B61FF;flex-shrink:0}
 
-.cards-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:16px;
+/* Kartlar */
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.kart{
+  background:#fff;border-radius:22px;
+  padding:24px 16px 20px;text-align:center;
+  border:1.5px solid rgba(0,0,0,.05);
+  box-shadow:0 2px 16px rgba(100,80,200,.07);
+  transition:transform .22s,box-shadow .22s,border-color .22s;
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;
 }
-.subject-card{
-  background:#fff;border-radius:20px;padding:24px 16px;text-align:center;
-  border:1.5px solid var(--border);
-  transition:transform .2s,box-shadow .2s,border-color .2s;
-  cursor:pointer;position:relative;overflow:hidden;
-}
-.subject-card::before{
-  content:'';position:absolute;inset:0;opacity:0;transition:.2s;
-}
-.subject-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
-.subject-card:hover::before{opacity:1}
+.kart:hover{transform:translateY(-7px);box-shadow:0 14px 36px rgba(100,80,200,.13)}
 
-.sc-scratch::before{background:radial-gradient(ellipse at top,rgba(249,115,22,0.06),transparent)}
-.sc-scratch:hover{border-color:rgba(249,115,22,0.3)}
-.sc-arduino::before{background:radial-gradient(ellipse at top,rgba(14,165,160,0.06),transparent)}
-.sc-arduino:hover{border-color:rgba(14,165,160,0.3)}
-.sc-tinkercad::before{background:radial-gradient(ellipse at top,rgba(245,158,11,0.06),transparent)}
-.sc-tinkercad:hover{border-color:rgba(245,158,11,0.3)}
-.sc-algoritma::before{background:radial-gradient(ellipse at top,rgba(249,115,22,0.06),transparent)}
-.sc-algoritma:hover{border-color:rgba(249,115,22,0.3)}
-.sc-yapayzeka::before{background:radial-gradient(ellipse at top,rgba(124,92,232,0.06),transparent)}
-.sc-yapayzeka:hover{border-color:rgba(124,92,232,0.3)}
-
-.card-icon-wrap{
-  width:72px;height:72px;border-radius:20px;margin:0 auto 14px;
-  display:flex;align-items:center;justify-content:center;font-size:2rem;
+.kart-icon{
+  width:80px;height:80px;border-radius:20px;
+  margin:0 auto 14px;display:flex;align-items:center;justify-content:center;
 }
-.ci-scratch{background:#fff3e6}
-.ci-arduino{background:#e0f5f4}
-.ci-tinkercad{background:#fef3c7}
-.ci-algoritma{background:#fff3e6}
-.ci-yapayzeka{background:#ede9fe}
-
-.card-icon-img{width:48px;height:48px;object-fit:contain}
-.card-name{
-  font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:900;
-  margin-bottom:6px;
+.kart-name{font-size:1rem;font-weight:900;margin-bottom:7px}
+.kart-desc{font-size:.76rem;color:#6b7280;line-height:1.5;margin-bottom:18px;font-weight:600;flex:1}
+.kart-btn{
+  width:40px;height:40px;border-radius:50%;border:none;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1rem;font-weight:900;cursor:pointer;
+  transition:.2s;flex-shrink:0;
 }
-.card-desc{font-size:.8rem;color:var(--muted);line-height:1.5;margin-bottom:16px;font-weight:600}
-.card-btn{
-  width:36px;height:36px;border-radius:50%;border:none;
-  display:inline-flex;align-items:center;justify-content:center;
-  font-size:.9rem;cursor:pointer;transition:.2s;color:#fff;font-weight:800;
-}
-.card-btn:hover{transform:scale(1.1)}
-.cb-scratch{background:linear-gradient(135deg,#f97316,#ea580c)}
-.cb-arduino{background:linear-gradient(135deg,#0ea5a0,#0d9488)}
-.cb-tinkercad{background:linear-gradient(135deg,#f59e0b,#d97706)}
-.cb-algoritma{background:linear-gradient(135deg,#f97316,#ea580c)}
-.cb-yapayzeka{background:linear-gradient(135deg,#7c5ce8,#6d28d9)}
+.kart-btn:hover{transform:scale(1.12);filter:brightness(1.08)}
+.kart-btn svg{width:16px;height:16px}
 
-/* ── ÖZELLİKLER ── */
+/* ══ FEATURES ══ */
 .features{
-  background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-  padding:36px 5%;position:relative;z-index:1;
+  background:#fff;border-top:1px solid rgba(0,0,0,.06);
+  padding:30px 40px;
 }
 .features-inner{
-  max-width:1200px;margin:0 auto;
-  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
 }
 .feat{display:flex;align-items:flex-start;gap:12px}
-.feat-icon{
-  width:44px;height:44px;border-radius:12px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+.feat-ico{
+  width:44px;height:44px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.15rem;
 }
-.fi-1{background:#ede9fe}
-.fi-2{background:#dcfce7}
-.fi-3{background:#dbeafe}
-.fi-4{background:#fff3e6}
-.feat-title{font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;color:var(--navy);margin-bottom:3px}
-.feat-desc{font-size:.78rem;color:var(--muted);line-height:1.5;font-weight:600}
+.feat-title{font-size:.88rem;font-weight:900;color:#1a1f6e;margin-bottom:4px}
+.feat-desc{font-size:.76rem;color:#6b7280;line-height:1.55;font-weight:600}
 
-/* ── MODAL ── */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,31,110,.6);z-index:200;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;backdrop-filter:blur(4px)}
-.modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:24px;width:100%;max-width:680px;padding:36px;position:relative;margin:auto;animation:fadeUp .25s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.modal-close{position:absolute;top:16px;right:16px;background:var(--bg);border:none;width:32px;height:32px;border-radius:8px;font-size:1.1rem;cursor:pointer;color:var(--muted);transition:.2s;display:flex;align-items:center;justify-content:center}
-.modal-close:hover{background:rgba(124,92,232,.1);color:var(--purple)}
-.modal-tag{font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;font-family:'Nunito',sans-serif}
-.modal h2{font-family:'Nunito',sans-serif;font-size:1.5rem;font-weight:900;margin-bottom:6px;line-height:1.2;color:var(--navy)}
-.modal-kisa{font-size:.9rem;color:var(--muted);font-weight:600}
-.modal-section{margin-top:20px}
-.modal-sec-title{font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-family:'Nunito',sans-serif}
-.modal p.anlatim{font-size:.95rem;color:#444;line-height:1.8;font-weight:600}
-.adim-list{list-style:none;display:flex;flex-direction:column;gap:8px}
-.adim-list li{display:flex;gap:12px;align-items:flex-start;background:var(--bg);border-radius:10px;padding:10px 14px;font-size:.88rem;line-height:1.5;font-weight:600}
-.adim-no{font-family:'Nunito',sans-serif;font-weight:900;font-size:.85rem;min-width:22px;margin-top:1px}
-.modal-video{margin-top:14px;border-radius:16px;overflow:hidden;aspect-ratio:16/9;background:#000}
-.modal-video iframe{width:100%;height:100%;border:none}
-.modal-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-.modal-btn{display:inline-flex;align-items:center;gap:6px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;padding:10px 20px;border-radius:20px;border:none;cursor:pointer;text-decoration:none;transition:opacity .2s,transform .15s;color:#fff}
-.modal-btn:hover{opacity:.88;transform:scale(1.03)}
-
-/* HATA */
-.hata{text-align:center;padding:60px 20px;background:#fff;border-radius:20px;border:1px solid var(--border);margin:0 5%}
-.hata h2{font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:900;margin-bottom:10px;color:var(--purple)}
-.hata p{font-size:.88rem;color:var(--muted);line-height:1.7;font-weight:600}
-.hata code{background:var(--bg);padding:2px 8px;border-radius:4px;font-size:.82rem}
-
+/* ══ FOOTER ══ */
 footer{
-  position:relative;z-index:1;
-  background:#fff;border-top:1px solid var(--border);
-  padding:24px 5%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
-  font-size:.82rem;color:var(--muted);font-weight:700;max-width:100%;
+  background:#fff;border-top:1px solid rgba(0,0,0,.06);
+  padding:20px 40px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px;
+  font-size:.8rem;font-weight:700;color:#9ca3af;
 }
-.footer-logo{font-family:'Nunito',sans-serif;font-weight:900;color:var(--navy);display:flex;align-items:center;gap:6px}
-.footer-logo span{color:var(--purple)}
+.footer-logo{font-size:.95rem;font-weight:900;display:flex;align-items:center;gap:4px}
 
-@media(max-width:900px){
-  .hero{grid-template-columns:1fr;text-align:center}
+/* ══ MODAL ══ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,31,110,.6);z-index:200;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;backdrop-filter:blur(5px)}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:26px;width:100%;max-width:660px;padding:38px;position:relative;margin:auto;animation:fadeUp .25s ease;box-shadow:0 24px 64px rgba(26,31,110,.2)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.modal-close{position:absolute;top:16px;right:16px;background:#f3f4f6;border:none;width:32px;height:32px;border-radius:8px;font-size:1rem;cursor:pointer;color:#6b7280;display:flex;align-items:center;justify-content:center;transition:.15s}
+.modal-close:hover{background:#ede9fe;color:#7B61FF}
+.modal-eyebrow{font-size:.72rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px}
+.modal h2{font-size:1.45rem;font-weight:900;letter-spacing:-.3px;margin-bottom:5px;color:#1a1f6e}
+.modal-sub{font-size:.9rem;font-weight:600;color:#6b7280}
+.modal-sec{margin-top:20px}
+.modal-sec-lbl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#9ca3af;margin-bottom:9px}
+.modal p.body{font-size:.92rem;font-weight:600;color:#374151;line-height:1.8}
+.step-list{display:flex;flex-direction:column;gap:7px}
+.step-item{display:flex;gap:11px;align-items:flex-start;background:#f9fafb;border-radius:10px;padding:10px 13px;font-size:.86rem;font-weight:600;line-height:1.5}
+.step-num{font-weight:900;font-size:.82rem;min-width:20px;margin-top:1px}
+.modal-video{margin-top:12px;border-radius:16px;overflow:hidden;aspect-ratio:16/9;background:#000}
+.modal-video iframe{width:100%;height:100%;border:none}
+.modal-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+.modal-lbtn{display:inline-flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:800;padding:9px 16px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;color:#fff;transition:.15s}
+.modal-lbtn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:980px){
+  .hero{grid-template-columns:1fr;padding:40px 24px;text-align:center}
   .hero-right{display:none}
-  .cards-grid{grid-template-columns:repeat(3,1fr)}
-  .features-inner{grid-template-columns:repeat(2,1fr)}
+  .h-underline{margin:5px auto}
+  .hero-sub{margin-left:auto;margin-right:auto}
   .hero-btns{justify-content:center}
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .features-inner{grid-template-columns:repeat(2,1fr)}
+  .discover,.features{padding-left:24px;padding-right:24px}
 }
 @media(max-width:600px){
-  .cards-grid{grid-template-columns:repeat(2,1fr)}
+  .cards{grid-template-columns:repeat(2,1fr)}
   .features-inner{grid-template-columns:1fr}
-  nav{padding:0 4%}
-  .nav-links{gap:2px}
-  .nav-link{padding:7px 10px;font-size:.8rem}
+  .nav,.btn-giris{display:none}
+  footer{padding:18px 24px}
 }
 </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav>
-  <a class="nav-logo" href="#">
-    <div class="nav-logo-icon">🤖</div>
-    <span class="nav-logo-text">kod<span>bino</span></span>
-  </a>
-  <div class="nav-links">
-    <a class="nav-link active-pill" href="#">Ana Sayfa</a>
-    <a class="nav-link" href="#discover">Projeler</a>
-    <a class="nav-link" href="#discover">Dersler</a>
-    <a class="nav-link" href="#discover">Araçlar</a>
-    <a class="nav-link" href="#about">Hakkımızda</a>
-  </div>
-</nav>
+<!-- ══ HEADER ══ -->
+<div class="header-outer">
+  <div class="header-pill">
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
-    <div class="hero-tag">8–15 yaş arası kodlama platformu</div>
-    <h1 class="hero-h1">
-      <span class="l1">Hayal Et,</span><br>
-      <span class="l2">Kodla,</span><br>
-      <span class="l3">Geliştir!</span>
-    </h1>
-    <p class="hero-p">8–15 yaş arası çocuklar için eğlenceli<br>kodlama ve teknoloji platformu.</p>
-    <div class="hero-btns">
-      <a class="btn-primary" href="#discover">Hemen Keşfet</a>
-    </div>
-  </div>
-
-  <div class="hero-right">
-    <div class="robot-wrap">
-      <div class="robot-bg"></div>
-      <!-- Robot placeholder — kendi görselini buraya koy -->
-      <div style="width:280px;height:280px;border-radius:30px;background:linear-gradient(135deg,rgba(124,92,232,0.12),rgba(58,181,74,0.1));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;animation:float 3s ease-in-out infinite;position:relative;z-index:1;border:2px dashed rgba(124,92,232,0.2)">
-        <div style="font-size:5rem;filter:drop-shadow(0 8px 16px rgba(124,92,232,0.3))">🤖</div>
-        <div style="font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:800;color:var(--purple);opacity:.7">Robot görseli buraya gelecek</div>
+    <!-- Logo -->
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <!-- Sevimli robot SVG: turuncu kulaklıklı, yeşil yapraklı, dijital gözlü -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <!-- Yeşil yaprak -->
+          <ellipse cx="16" cy="3" rx="4" ry="5" fill="#22c55e" transform="rotate(-15 16 3)"/>
+          <path d="M14 5 Q16 2 18 5" fill="#16a34a"/>
+          <!-- Baş -->
+          <rect x="6" y="8" width="20" height="14" rx="7" fill="#f5f5f5"/>
+          <rect x="6" y="8" width="20" height="14" rx="7" stroke="#e5e7eb" stroke-width=".8"/>
+          <!-- Dijital gözler — mavi ekran -->
+          <rect x="8" y="11" width="6" height="5" rx="2" fill="#4F9FFF"/>
+          <rect x="18" y="11" width="6" height="5" rx="2" fill="#4F9FFF"/>
+          <!-- Göz parlaması -->
+          <circle cx="9.5" cy="12.5" r="1.2" fill="#fff" opacity=".8"/>
+          <circle cx="19.5" cy="12.5" r="1.2" fill="#fff" opacity=".8"/>
+          <!-- Ağız gülümseme -->
+          <path d="M12 19 Q16 22 20 19" stroke="#9ca3af" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+          <!-- Kulaklar (turuncu kulaklık) -->
+          <rect x="2" y="12" width="5" height="7" rx="2.5" fill="#f97316"/>
+          <rect x="25" y="12" width="5" height="7" rx="2.5" fill="#f97316"/>
+          <!-- Anten -->
+          <rect x="15" y="4" width="2" height="5" rx="1" fill="#d1d5db"/>
+          <circle cx="16" cy="4" r="1.5" fill="#7B61FF"/>
+        </svg>
       </div>
-      <div class="bubble b1">💡</div>
-      <div class="bubble b2">⚡</div>
-      <div class="bubble b3">&lt;/&gt;</div>
-      <div class="bubble b4">🌱</div>
+      <div class="logo-wordmark">
+        <span class="logo-kod">kod</span><span class="logo-bino">bino</span>
+      </div>
+    </a>
+
+    <!-- Nav -->
+    <nav class="nav">
+      <a class="nav-active" href="#">🏠 Ana Sayfa</a>
+      <a href="#discover">Projeler</a>
+      <a href="#discover">Dersler</a>
+      <a href="#discover">Araçlar</a>
+      <a href="#about">Hakkımızda</a>
+    </nav>
+
+    <!-- Giriş Yap -->
+    <a class="btn-giris" href="#">
+      <svg viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="7" r="3.5" stroke="#fff" stroke-width="1.8"/>
+        <path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Giriş Yap
+    </a>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div>
+    <h1 class="hero-h1">
+      <span class="h-dark">Hayal Et,</span>
+      <span class="h-purple">Kodla,<span class="h-underline"></span></span>
+      <span class="h-green">Geliştir!</span>
+    </h1>
+    <p class="hero-sub">8–15 yaş arası çocuklar için eğlenceli<br>kodlama ve teknoloji platformu.</p>
+    <div class="hero-btns">
+      <a class="btn-kesfet" href="#discover">
+        <span class="btn-kesfet-ico">🚀</span>Hemen Keşfet
+      </a>
+      <a class="btn-video" href="#">
+        <span class="btn-video-ico">
+          <svg viewBox="0 0 14 14" fill="none">
+            <polygon points="3,1 13,7 3,13" fill="#1a1f6e"/>
+          </svg>
+        </span>
+        Tanıtım Videosu
+      </a>
+    </div>
+  </div>
+
+  <!-- Robot -->
+  <div class="hero-right">
+    <div class="robot-scene">
+      <div class="robot-blob"></div>
+      <div class="robot-main">
+        <img src="robot.png" alt="Kodbino Robot"
+          onerror="this.style.display='none';document.getElementById('rfb').style.display='flex'">
+        <div id="rfb" class="robot-emoji-fb">
+          <!-- Büyük robot SVG placeholder -->
+          <svg width="260" height="280" viewBox="0 0 260 280" fill="none">
+            <!-- Gölge -->
+            <ellipse cx="130" cy="275" rx="60" ry="6" fill="rgba(123,97,255,.1)"/>
+            <!-- Bacaklar -->
+            <rect x="90" y="220" width="30" height="44" rx="10" fill="#dde4ff"/>
+            <rect x="140" y="220" width="30" height="44" rx="10" fill="#dde4ff"/>
+            <rect x="82" y="254" width="46" height="12" rx="6" fill="#c7d2fe"/>
+            <rect x="132" y="254" width="46" height="12" rx="6" fill="#c7d2fe"/>
+            <!-- Gövde -->
+            <rect x="60" y="130" width="140" height="96" rx="28" fill="#eef2ff"/>
+            <rect x="60" y="130" width="140" height="96" rx="28" stroke="rgba(123,97,255,.15)" stroke-width="1.5"/>
+            <!-- Gövde panel -->
+            <rect x="80" y="150" width="100" height="54" rx="14" fill="#fff"/>
+            <circle cx="97" cy="170" r="6" fill="#7B61FF" opacity=".8"/>
+            <circle cx="117" cy="170" r="6" fill="#22c55e" opacity=".8"/>
+            <circle cx="137" cy="170" r="6" fill="#f59e0b" opacity=".8"/>
+            <rect x="90" y="186" width="50" height="4" rx="2" fill="rgba(123,97,255,.2)"/>
+            <rect x="90" y="196" width="36" height="4" rx="2" fill="rgba(123,97,255,.12)"/>
+            <!-- Kollar -->
+            <rect x="24" y="140" width="38" height="64" rx="19" fill="#eef2ff" stroke="rgba(123,97,255,.15)" stroke-width="1.5"/>
+            <circle cx="43" cy="212" r="11" fill="#dde4ff"/>
+            <rect x="198" y="140" width="38" height="64" rx="19" fill="#eef2ff" stroke="rgba(123,97,255,.15)" stroke-width="1.5"/>
+            <circle cx="217" cy="212" r="11" fill="#dde4ff"/>
+            <!-- Boyun -->
+            <rect x="112" y="116" width="36" height="18" rx="7" fill="#dde4ff"/>
+            <!-- Baş -->
+            <rect x="64" y="40" width="132" height="80" rx="34" fill="#fff"/>
+            <rect x="64" y="40" width="132" height="80" rx="34" stroke="rgba(123,97,255,.15)" stroke-width="1.5"/>
+            <!-- Anten -->
+            <rect x="124" y="20" width="12" height="24" rx="6" fill="#dde4ff"/>
+            <circle cx="130" cy="18" r="9" fill="#7B61FF"/>
+            <circle cx="130" cy="18" r="5" fill="#fff" opacity=".6"/>
+            <!-- Dijital gözler — mavi parlayan ekranlar -->
+            <rect x="82" y="60" width="40" height="26" rx="9" fill="#4F9FFF"/>
+            <rect x="82" y="60" width="40" height="26" rx="9" fill="url(#eyeGrad)" opacity=".6"/>
+            <rect x="138" y="60" width="40" height="26" rx="9" fill="#4F9FFF"/>
+            <rect x="138" y="60" width="40" height="26" rx="9" fill="url(#eyeGrad)" opacity=".6"/>
+            <!-- Göz parlamaları -->
+            <circle cx="90" cy="67" r="4" fill="#fff" opacity=".85"/>
+            <circle cx="146" cy="67" r="4" fill="#fff" opacity=".85"/>
+            <!-- Göz ışıkları küçük -->
+            <circle cx="94" cy="71" r="1.5" fill="#fff" opacity=".5"/>
+            <circle cx="150" cy="71" r="1.5" fill="#fff" opacity=".5"/>
+            <!-- Gülümseme -->
+            <path d="M104 100 Q130 114 156 100" stroke="rgba(123,97,255,.35)" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <!-- Kulaklıklar (turuncu) -->
+            <rect x="38" y="54" width="28" height="36" rx="14" fill="#f97316"/>
+            <rect x="41" y="58" width="22" height="28" rx="11" fill="#fdba74"/>
+            <rect x="194" y="54" width="28" height="36" rx="14" fill="#f97316"/>
+            <rect x="197" y="58" width="22" height="28" rx="11" fill="#fdba74"/>
+            <!-- Yeşil yaprak (başın üstünde) -->
+            <ellipse cx="130" cy="32" rx="14" ry="18" fill="#22c55e" transform="rotate(-10 130 32)"/>
+            <ellipse cx="138" cy="28" rx="10" ry="14" fill="#16a34a" transform="rotate(-10 138 28)" opacity=".6"/>
+            <path d="M124 38 Q130 28 140 34" stroke="#15803d" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="eyeGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7B61FF"/>
+                <stop offset="100%" stop-color="#4F9FFF"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+      <!-- Deco chips -->
+      <div class="deco d1">{ }</div>
+      <div class="deco d2">&lt;/&gt;</div>
+      <div class="deco d3">💡</div>
+      <div class="deco d4">⭐</div>
     </div>
   </div>
 </section>
 
-<!-- NEYİ KEŞFETMEk İSTERSİN? -->
+<!-- ══ DISCOVER ══ -->
 <section class="discover" id="discover">
-  <div class="discover-title">Neyi Keşfetmek İstersin?</div>
-  <div class="cards-grid" id="cards-grid">
-    <!-- JS ile doldurulacak -->
+  <div class="disc-title">
+    <span class="disc-line"></span>
+    <span class="disc-dot"></span>
+    Neyi Keşfetmek İstersin?
+    <span class="disc-dot"></span>
+    <span class="disc-line disc-line-r"></span>
   </div>
+  <div class="cards" id="cards-grid"></div>
 </section>
 
-<!-- ÖZELLİKLER -->
-<section class="features">
+<!-- ══ FEATURES ══ -->
+<section class="features" id="features">
   <div class="features-inner">
     <div class="feat">
-      <div class="feat-icon fi-1">🎮</div>
-      <div>
-        <div class="feat-title">Eğlenerek Öğren</div>
-        <div class="feat-desc">Oyunlar ve projelerle öğrenmek çok keyifli!</div>
-      </div>
+      <div class="feat-ico" style="background:#ede9fe">🎮</div>
+      <div><div class="feat-title">Eğlenerek Öğren</div><div class="feat-desc">Oyunlar ve projelerle öğrenmek çok keyifli!</div></div>
     </div>
     <div class="feat">
-      <div class="feat-icon fi-2">🏅</div>
-      <div>
-        <div class="feat-title">Rozetler Kazan</div>
-        <div class="feat-desc">Başarılarını rozetlerle taçlandır!</div>
-      </div>
+      <div class="feat-ico" style="background:#dcfce7">🏅</div>
+      <div><div class="feat-title">Rozetler Kazan</div><div class="feat-desc">Başarılarını rozetlerle taçlandır!</div></div>
     </div>
     <div class="feat">
-      <div class="feat-icon fi-3">👥</div>
-      <div>
-        <div class="feat-title">Topluluğa Katıl</div>
-        <div class="feat-desc">Arkadaşlarınla birlikte üret ve paylaş!</div>
-      </div>
+      <div class="feat-ico" style="background:#dbeafe">👥</div>
+      <div><div class="feat-title">Topluluğa Katıl</div><div class="feat-desc">Arkadaşlarınla birlikte üret ve paylaş!</div></div>
     </div>
     <div class="feat">
-      <div class="feat-icon fi-4">🚀</div>
-      <div>
-        <div class="feat-title">Gelişimini Takip Et</div>
-        <div class="feat-desc">İlerlemeyi gör, hedeflerine ulaş!</div>
-      </div>
+      <div class="feat-ico" style="background:#fff3e6">🚀</div>
+      <div><div class="feat-title">Gelişimini Takip Et</div><div class="feat-desc">İlerlemeyi gör, hedeflerine ulaş!</div></div>
     </div>
   </div>
 </section>
 
 <footer id="about">
-  <div class="footer-logo">kod<span>bino</span> 🌱</div>
+  <div class="footer-logo">
+    <span class="logo-kod">kod</span><span class="logo-bino">bino</span> 🌱
+  </div>
   <span id="footer-text">© 2026 Kodbino · Birlikte öğreniyoruz!</span>
 </footer>
 
 <!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="kapatModal(event)">
+<div class="modal-overlay" id="modal-overlay" onclick="km(event)">
   <div class="modal">
-    <button class="modal-close" onclick="kapatModal(null,true)">✕</button>
+    <button class="modal-close" onclick="km(null,true)">✕</button>
     <div id="modal-content"></div>
   </div>
 </div>
 
 <script src="icerikler.js"></script>
 <script>
-const KART = {
-  scratch:   {renk:'#f97316',bg:'#fff3e6',ikon:'ci-scratch',btn:'cb-scratch',emoji:'🐱',isim:'Scratch'},
-  tinkercad: {renk:'#f59e0b',bg:'#fef3c7',ikon:'ci-tinkercad',btn:'cb-tinkercad',emoji:'🔧',isim:'Tinkercad'},
-  arduino:   {renk:'#0ea5a0',bg:'#e0f5f4',ikon:'ci-arduino',btn:'cb-arduino',emoji:'⚡',isim:'Arduino'},
-  algoritma: {renk:'#f97316',bg:'#fff3e6',ikon:'ci-algoritma',btn:'cb-algoritma',emoji:'🧩',isim:'Algoritma'},
-  yapay_zeka:{renk:'#7c5ce8',bg:'#ede9fe',ikon:'ci-yapayzeka',btn:'cb-yapayzeka',emoji:'🤖',isim:'Yapay Zeka'},
-};
-const ACIKLAMA = {
-  scratch:   'Kendi oyunlarını ve animasyonlarını yap!',
-  tinkercad: '3D tasarla ve simülasyon yap!',
-  arduino:   'Elektronik projeler geliştir!',
-  algoritma: 'Mantığını geliştir, problemleri çöz!',
-  yapay_zeka:'Geleceğin teknolojisini keşfet!',
+const CC={
+  scratch:{
+    r:'#f97316',bg:'#fff8f0',isim:'Scratch',
+    desc:'Kendi oyunlarını ve animasyonlarını yap!',
+    svg:`<svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+      <circle cx="29" cy="33" r="19" fill="#f97316"/>
+      <circle cx="29" cy="31" r="17" fill="#ffa94d"/>
+      <polygon points="15,19 11,9 21,16" fill="#f97316"/>
+      <polygon points="43,19 47,9 37,16" fill="#f97316"/>
+      <polygon points="15,19 13,12 20,17" fill="#ffd6a5"/>
+      <polygon points="43,19 45,12 38,17" fill="#ffd6a5"/>
+      <ellipse cx="23" cy="28" rx="4" ry="4.5" fill="#fff"/>
+      <ellipse cx="35" cy="28" rx="4" ry="4.5" fill="#fff"/>
+      <circle cx="24" cy="29" r="2.2" fill="#1a1f6e"/>
+      <circle cx="36" cy="29" r="2.2" fill="#1a1f6e"/>
+      <circle cx="24.8" cy="27.8" r=".9" fill="#fff"/>
+      <circle cx="36.8" cy="27.8" r=".9" fill="#fff"/>
+      <ellipse cx="29" cy="35" rx="2.8" ry="1.8" fill="#e05a00"/>
+      <path d="M24 38 Q29 43 34 38" stroke="#e05a00" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <line x1="9" y1="33" x2="23" y2="34.5" stroke="#c0440a" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="9" y1="37" x2="23" y2="36" stroke="#c0440a" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="49" y1="33" x2="35" y2="34.5" stroke="#c0440a" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="49" y1="37" x2="35" y2="36" stroke="#c0440a" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>`
+  },
+  arduino:{
+    r:'#0ea5a0',bg:'#e0f5f4',isim:'Arduino',
+    desc:'Elektronik projeler geliştir!',
+    svg:`<svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+      <path d="M9 29C9 18 20 18 29 29C38 40 49 40 49 29C49 18 38 18 29 29C20 40 9 40 9 29Z"
+        fill="none" stroke="#0ea5a0" stroke-width="5.5" stroke-linecap="round"/>
+      <line x1="15" y1="24" x2="15" y2="34" stroke="#0ea5a0" stroke-width="3" stroke-linecap="round"/>
+      <line x1="10" y1="29" x2="20" y2="29" stroke="#0ea5a0" stroke-width="3" stroke-linecap="round"/>
+      <line x1="38" y1="29" x2="48" y2="29" stroke="#0ea5a0" stroke-width="3" stroke-linecap="round"/>
+    </svg>`
+  },
+  tinkercad:{
+    r:'#f59e0b',bg:'#fef9e6',isim:'Tinkercad',
+    desc:'3D tasarla ve simülasyon yap!',
+    svg:`<svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+      <rect x="5" y="28" width="20" height="20" rx="4" fill="#ef4444"/>
+      <polygon points="5,28 13,22 25,22 25,30 13,36 5,36" fill="#dc2626" opacity=".25"/>
+      <rect x="5" y="19" width="20" height="11" rx="3" fill="#fca5a5"/>
+      <rect x="19" y="22" width="20" height="20" rx="4" fill="#3b82f6"/>
+      <rect x="19" y="13" width="20" height="11" rx="3" fill="#93c5fd"/>
+      <rect x="33" y="28" width="20" height="20" rx="4" fill="#f59e0b"/>
+      <polygon points="33,28 41,22 53,22 53,30 41,36 33,36" fill="#d97706" opacity=".25"/>
+      <rect x="33" y="19" width="20" height="11" rx="3" fill="#fcd34d"/>
+    </svg>`
+  },
+  algoritma:{
+    r:'#f97316',bg:'#fff3f0',isim:'Algoritma',
+    desc:'Mantığını geliştir, problemleri çöz!',
+    svg:`<svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+      <rect x="19" y="3" width="20" height="10" rx="4" fill="#f97316"/>
+      <line x1="29" y1="13" x2="29" y2="19" stroke="#f97316" stroke-width="2.5"/>
+      <polygon points="29,19 42,29 29,39 16,29" fill="#fbbf24"/>
+      <polygon points="29,22 39,29 29,36 19,29" fill="#fde68a"/>
+      <line x1="16" y1="29" x2="7" y2="29" stroke="#f97316" stroke-width="2"/>
+      <rect x="2" y="24" width="9" height="10" rx="3" fill="#f97316" opacity=".7"/>
+      <line x1="42" y1="29" x2="51" y2="29" stroke="#f97316" stroke-width="2"/>
+      <rect x="47" y="24" width="9" height="10" rx="3" fill="#f97316" opacity=".7"/>
+      <line x1="29" y1="39" x2="29" y2="47" stroke="#f97316" stroke-width="2"/>
+      <ellipse cx="29" cy="52" rx="9" ry="4.5" fill="#f97316" opacity=".45"/>
+    </svg>`
+  },
+  yapay_zeka:{
+    r:'#8b5cf6',bg:'#f3f0ff',isim:'Yapay Zeka',
+    desc:'Geleceğin teknolojisini keşfet!',
+    svg:`<svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+      <ellipse cx="29" cy="27" rx="19" ry="16" fill="#c4b5fd"/>
+      <path d="M17 19 Q11 23 12 31 Q13 37 19 39" stroke="#7c3aed" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M41 19 Q47 23 46 31 Q45 37 39 39" stroke="#7c3aed" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <line x1="29" y1="11" x2="29" y2="43" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="3 2.5"/>
+      <path d="M18 22 Q22 19 26 22 Q30 25 34 22 Q38 19 41 22" stroke="#7c3aed" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M17 31 Q21 28 25 31 Q29 34 33 31 Q37 28 41 31" stroke="#7c3aed" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <rect x="25" y="41" width="8" height="9" rx="3" fill="#8b5cf6"/>
+      <rect x="20" y="48" width="18" height="5" rx="2.5" fill="#a78bfa"/>
+      <circle cx="21" cy="18" r="3" fill="#fff" opacity=".55"/>
+      <circle cx="23" cy="27" r="2.2" fill="#7c3aed" opacity=".5"/>
+      <circle cx="35" cy="27" r="2.2" fill="#7c3aed" opacity=".5"/>
+    </svg>`
+  }
 };
 
 function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML}
@@ -423,73 +581,59 @@ window.addEventListener('load',()=>{
   if(typeof ICERIK==='undefined'){hataGoster();return;}
   kartsGoster();
   if(ICERIK.site?.footer) document.getElementById('footer-text').textContent=ICERIK.site.footer;
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')kapatModal(null,true)});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')km(null,true)});
 });
 
 function kartsGoster(){
   const menuler=(ICERIK.menuler||[]).filter(m=>m.aktif!==false).sort((a,b)=>a.sira-b.sira);
-  const grid=document.getElementById('cards-grid');
-  grid.innerHTML=menuler.map(m=>{
-    const k=KART[m.id]||{renk:'#7c5ce8',bg:'#ede9fe',ikon:'ci-yapayzeka',btn:'cb-yapayzeka',emoji:'📌',isim:m.baslik};
-    const ac=ACIKLAMA[m.id]||'Keşfet!';
-    return `<div class="subject-card sc-${m.id}" onclick="bolumAc('${m.id}')">
-      <div class="card-icon-wrap ${k.ikon}">
-        <span style="font-size:2.2rem">${k.emoji}</span>
-      </div>
-      <div class="card-name" style="color:${k.renk}">${esc(m.baslik)}</div>
-      <div class="card-desc">${ac}</div>
-      <button class="card-btn ${k.btn}">→</button>
+  document.getElementById('cards-grid').innerHTML=menuler.map(m=>{
+    const c=CC[m.id]||{r:'#7B61FF',bg:'#ede9fe',isim:m.baslik,desc:'Keşfet!',svg:'<span style="font-size:2.5rem">📌</span>'};
+    return `<div class="kart"
+      onmouseenter="this.style.borderColor='${c.r}33'"
+      onmouseleave="this.style.borderColor='rgba(0,0,0,.05)'"
+      onclick="bolumAc('${m.id}')">
+      <div class="kart-icon" style="background:${c.bg}">${c.svg}</div>
+      <div class="kart-name" style="color:${c.r}">${esc(m.baslik)}</div>
+      <div class="kart-desc">${c.desc}</div>
+      <button class="kart-btn" style="background:${c.r}">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8H13M9 4L13 8L9 12" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
     </div>`;
   }).join('');
 }
 
 function bolumAc(id){
   const liste=(ICERIK.bolumler||{})[id]||[];
-  const k=KART[id]||{renk:'#7c5ce8',emoji:'📌',isim:id};
-  if(!liste.length){
-    alert('Bu bölümde henüz içerik yok.');return;
-  }
-  // İlk içeriği modal'da göster (basit versiyon — liste gösterimini ileride ekleyebiliriz)
+  if(!liste.length){alert('Bu bölümde henüz içerik yok.');return;}
   acModal(id,liste[0]);
 }
 
 function acModal(id,veri){
-  const k=KART[id]||{renk:'#7c5ce8',emoji:'📌'};
+  const c=CC[id]||{r:'#7B61FF',isim:id};
   let adimHTML='';
-  if(veri.adimlar?.length) adimHTML=`
-    <div class="modal-section">
-      <div class="modal-sec-title">Adım Adım</div>
-      <ul class="adim-list">${veri.adimlar.map((a,i)=>`
-        <li><span class="adim-no" style="color:${k.renk}">${i+1}.</span><span>${esc(a)}</span></li>`).join('')}
-      </ul></div>`;
+  if(veri.adimlar?.length) adimHTML=`<div class="modal-sec"><div class="modal-sec-lbl">Adım Adım</div>
+    <div class="step-list">${veri.adimlar.map((a,i)=>`
+      <div class="step-item"><span class="step-num" style="color:${c.r}">${i+1}.</span><span>${esc(a)}</span></div>`).join('')}
+    </div></div>`;
   let vidHTML='';
-  if(veri.video_embed) vidHTML=`
-    <div class="modal-section">
-      <div class="modal-sec-title">Video</div>
-      <div class="modal-video"><iframe src="${veri.video_embed}" allowfullscreen loading="lazy"></iframe></div>
-    </div>`;
-  const linkler=[];
-  if(veri.scratch_link)   linkler.push(`<a class="modal-btn" style="background:${k.renk}" href="${veri.scratch_link}" target="_blank">🐱 Scratch'te Aç</a>`);
-  if(veri.tinkercad_link) linkler.push(`<a class="modal-btn" style="background:${k.renk}" href="${veri.tinkercad_link}" target="_blank">🔧 Tinkercad'de Aç</a>`);
-  if(veri.wokwi_link)     linkler.push(`<a class="modal-btn" style="background:${k.renk}" href="${veri.wokwi_link}" target="_blank">⚡ Wokwi'de Aç</a>`);
-  if(veri.pdf_link)       linkler.push(`<a class="modal-btn" style="background:${k.renk}" href="${veri.pdf_link}" download>📄 PDF İndir</a>`);
-  const linkHTML=linkler.length?`<div class="modal-section"><div class="modal-sec-title">Bağlantılar</div><div class="modal-links">${linkler.join('')}</div></div>`:'';
-
+  if(veri.video_embed) vidHTML=`<div class="modal-sec"><div class="modal-sec-lbl">Video</div><div class="modal-video"><iframe src="${veri.video_embed}" allowfullscreen loading="lazy"></iframe></div></div>`;
+  const ll=[];
+  if(veri.scratch_link)   ll.push(`<a class="modal-lbtn" style="background:${c.r}" href="${veri.scratch_link}" target="_blank">🐱 Scratch'te Aç</a>`);
+  if(veri.tinkercad_link) ll.push(`<a class="modal-lbtn" style="background:${c.r}" href="${veri.tinkercad_link}" target="_blank">🔧 Tinkercad'de Aç</a>`);
+  if(veri.wokwi_link)     ll.push(`<a class="modal-lbtn" style="background:${c.r}" href="${veri.wokwi_link}" target="_blank">⚡ Wokwi'de Aç</a>`);
+  if(veri.pdf_link)       ll.push(`<a class="modal-lbtn" style="background:${c.r}" href="${veri.pdf_link}" download>📄 PDF İndir</a>`);
+  const lHTML=ll.length?`<div class="modal-sec"><div class="modal-sec-lbl">Bağlantılar</div><div class="modal-links">${ll.join('')}</div></div>`:'';
   document.getElementById('modal-content').innerHTML=`
-    <div class="modal-tag" style="color:${k.renk}">${k.emoji} ${KART[id]?.isim||id}</div>
-    <h2>${esc(veri.baslik)}</h2>
-    <p class="modal-kisa">${esc(veri.kisa_aciklama)}</p>
-    <div class="modal-section">
-      <div class="modal-sec-title">Konu Anlatımı</div>
-      <p class="anlatim">${esc(veri.konu_anlatimi)}</p>
-    </div>
-    ${adimHTML}${vidHTML}${linkHTML}`;
+    <div class="modal-eyebrow" style="color:${c.r}">${c.isim}</div>
+    <h2>${esc(veri.baslik)}</h2><p class="modal-sub">${esc(veri.kisa_aciklama)}</p>
+    <div class="modal-sec"><div class="modal-sec-lbl">Konu Anlatımı</div><p class="body">${esc(veri.konu_anlatimi)}</p></div>
+    ${adimHTML}${vidHTML}${lHTML}`;
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
 
-function kapatModal(e,force){
-  if(force||(e&&e.target===document.getElementById('modal-overlay'))){
+function km(e,f){
+  if(f||(e&&e.target===document.getElementById('modal-overlay'))){
     document.getElementById('modal-overlay').classList.remove('open');
     document.body.style.overflow='';
   }
@@ -497,10 +641,12 @@ function kapatModal(e,force){
 
 function hataGoster(){
   document.getElementById('cards-grid').innerHTML=`
-    <div class="hata" style="grid-column:1/-1">
-      <h2>icerikler.js bulunamadı</h2>
-      <p>Admin panelinden (<code>admin.html</code>) <strong>Dışa Aktar</strong> bölümünden<br>
-      <code>icerikler.js</code> dosyasını indirip aynı klasöre koy.</p>
+    <div style="grid-column:1/-1;text-align:center;padding:48px;background:#fff;border-radius:20px;border:1px solid rgba(0,0,0,.06)">
+      <div style="font-size:1.1rem;font-weight:800;color:#7B61FF;margin-bottom:8px">icerikler.js bulunamadı</div>
+      <p style="font-size:.875rem;color:#6b7280;line-height:1.7;font-weight:600">
+        <code style="background:#f3f4f6;padding:2px 8px;border-radius:4px">admin.html</code>'den giriş yap →
+        <strong>Dışa Aktar</strong> → <code style="background:#f3f4f6;padding:2px 8px;border-radius:4px">icerikler.js</code>'yi bu klasöre koy.
+      </p>
     </div>`;
 }
 </script>

@@ -465,7 +465,20 @@ function veriKaydet(d){localStorage.setItem(DEPO,JSON.stringify(d))}
 let D=veriYukle();
 
 /* NETLIFY IDENTITY */
-netlifyIdentity.on('init',u=>{if(u)panelAc(u)});
+// Invite token veya recovery token varsa widget'ı otomatik aç
+netlifyIdentity.on('init', u => {
+  if(u) panelAc(u);
+});
+
+// URL'de invite_token veya recovery_token varsa widget'ı aç
+if(window.location.hash && (
+  window.location.hash.includes('invite_token') ||
+  window.location.hash.includes('recovery_token') ||
+  window.location.hash.includes('confirmation_token')
+)){
+  netlifyIdentity.open();
+}
+
 netlifyIdentity.on('login',u=>{netlifyIdentity.close();panelAc(u)});
 netlifyIdentity.on('logout',()=>{document.getElementById('panel').style.display='none';document.getElementById('login-screen').style.display='flex'});
 function panelAc(u){

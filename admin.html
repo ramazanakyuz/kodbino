@@ -470,14 +470,7 @@ netlifyIdentity.on('init', u => {
   if(u) panelAc(u);
 });
 
-// URL'de invite_token veya recovery_token varsa widget'ı aç
-if(window.location.hash && (
-  window.location.hash.includes('invite_token') ||
-  window.location.hash.includes('recovery_token') ||
-  window.location.hash.includes('confirmation_token')
-)){
-  netlifyIdentity.open();
-}
+// Token işleme callback.html tarafından yapılıyor.
 
 netlifyIdentity.on('login',u=>{netlifyIdentity.close();panelAc(u)});
 netlifyIdentity.on('logout',()=>{document.getElementById('panel').style.display='none';document.getElementById('login-screen').style.display='flex'});

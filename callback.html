@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kodbino — Doğrulama</title>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<style>
+  :root {
+    --purple: #7B61FF;
+    --purple-ll: #f5f3ff;
+    --navy: #1a1f6e;
+    --muted: #6b7280;
+    --border: rgba(123,97,255,0.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #eef2ff 0%, #f5f3ff 50%, #faf0ff 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+  .box {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 44px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(123,97,255,0.12);
+  }
+  .logo {
+    font-size: 1.3rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .logo-icon {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffe4b5, #ffd6ff);
+    border: 1.5px solid rgba(200,180,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+  }
+  .logo-kod { color: #0B1F78; }
+  .lb { color: #4C8DFF; } .li { color: #74C043; }
+  .ln { color: #F6C431; } .lo { color: #FF8A1F; }
+
+  h2 { font-size: 1.15rem; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+  p  { font-size: .85rem; color: var(--muted); font-weight: 600; line-height: 1.6; }
+
+  .spinner {
+    margin: 24px auto 0;
+    width: 36px; height: 36px;
+    border: 3px solid var(--purple-ll);
+    border-top-color: var(--purple);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .status {
+    margin-top: 20px;
+    font-size: .8rem;
+    color: var(--muted);
+    font-weight: 700;
+    min-height: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">
+    <div class="logo-icon">🤖</div>
+    <span>
+      <span class="logo-kod">kod</span><span class="lb">b</span><span class="li">i</span><span class="ln">n</span><span class="lo">o</span>
+    </span>
+  </div>
+  <h2>Kimlik Doğrulanıyor…</h2>
+  <p>Lütfen bekle, seni şifre ekranına yönlendiriyoruz.</p>
+  <div class="spinner"></div>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+  const hash = window.location.hash;
+  const params = new URLSearchParams(hash.replace('#', ''));
+
+  const token     = params.get('recovery_token')
+                 || params.get('invite_token')
+                 || params.get('confirmation_token');
+  const tokenType = params.has('recovery_token')     ? 'recovery'
+                  : params.has('invite_token')        ? 'invite'
+                  : params.has('confirmation_token')  ? 'confirmation'
+                  : null;
+
+  function setStatus(msg) {
+    document.getElementById('status').textContent = msg;
+  }
+
+  if (!token) {
+    // Token yok — admin'e yönlendir
+    setStatus('Token bulunamadı, yönlendiriliyorsun…');
+    setTimeout(() => { window.location.href = '/admin.html'; }, 2000);
+  } else {
+    // Netlify Identity widget hazır olduğunda token'ı işle
+    netlifyIdentity.on('init', () => {
+      setStatus('Token doğrulanıyor…');
+
+      if (tokenType === 'recovery') {
+        // Şifre sıfırlama: widget'ı recovery modunda aç
+        netlifyIdentity.open('recovery');
+      } else if (tokenType === 'invite') {
+        netlifyIdentity.open('invite');
+      } else if (tokenType === 'confirmation') {
+        netlifyIdentity.open('confirmation');
+      }
+    });
+
+    // Şifre belirlendikten / giriş yapıldıktan sonra admin'e git
+    netlifyIdentity.on('login', user => {
+      netlifyIdentity.close();
+      setStatus('Başarılı! Admin paneline yönlendiriliyorsun…');
+      setTimeout(() => { window.location.href = '/admin.html'; }, 800);
+    });
+
+    // Widget kapanırsa da admin'e yönlendir (iptal senaryosu)
+    netlifyIdentity.on('close', () => {
+      setTimeout(() => { window.location.href = '/admin.html'; }, 500);
+    });
+  }
+</script>
+</body>
+</html>

@@ -5,7 +5,98 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Kodbino</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBWV9SEuGtShSUKQbonekTO8HeGIOJO5w0",
+  authDomain: "kodbino-5fa6f.firebaseapp.com",
+  projectId: "kodbino-5fa6f",
+  storageBucket: "kodbino-5fa6f.firebasestorage.app",
+  messagingSenderId: "912558719816",
+  appId: "1:912558719816:web:7f0d82e40762320816a97d"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+const IZINLI_EMAIL = 'ramazanakyuz89@gmail.com'; // ← Sadece bu e-posta girebilir
+
+// Auth durumu değişince
+onAuthStateChanged(auth, async (user) => {
+  if (user && user.email === IZINLI_EMAIL) {
+    // Yetkili kullanıcı — veriyi Firestore'dan yükle
+    await veriYukleFS(user);
+    panelAc(user);
+  } else if (user) {
+    // Yetkisiz kullanıcı
+    await signOut(auth);
+    loginHata('Bu Google hesabının erişim yetkisi yok.');
+  } else {
+    // Giriş yapılmamış
+    loginEkraniGoster();
+  }
+});
+
+// Google ile giriş
+window.girisYap = async function() {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    loginHata('Giriş başarısız: ' + e.message);
+  }
+};
+
+// Çıkış
+window.cikisYap = async function() {
+  await signOut(auth);
+};
+
+// Firestore'dan veri yükle
+async function veriYukleFS(user) {
+  try {
+    const ref = doc(db, 'admin', 'icerik');
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      D = snap.data();
+    } else {
+      D = structuredClone(VARSAYILAN);
+    }
+  } catch(e) {
+    D = structuredClone(VARSAYILAN);
+  }
+}
+
+// Firestore'a veri kaydet
+window.veriKaydet = async function(d) {
+  try {
+    const ref = doc(db, 'admin', 'icerik');
+    await setDoc(ref, d);
+    D = d;
+  } catch(e) {
+    toast('Kaydetme hatası: ' + e.message);
+  }
+};
+
+function panelAc(user) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('panel').style.display = 'flex';
+  document.getElementById('user-email').textContent = user.email;
+  ozetYenile();
+}
+function loginEkraniGoster() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('panel').style.display = 'none';
+}
+function loginHata(msg) {
+  document.getElementById('pass-error').textContent = msg;
+  loginEkraniGoster();
+}
+</script>
 <style>
 :root{
   --purple:#7B61FF; --purple-d:#6d28d9; --purple-l:#ede9fe; --purple-ll:#f5f3ff;
@@ -270,9 +361,13 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
       <span><span class="logo-kod">kod</span><span class="lb">b</span><span class="li">i</span><span class="ln">n</span><span class="lo">o</span></span>
     </div>
     <h2>Yönetici Girişi</h2>
-    <p>Devam etmek için Netlify hesabınla giriş yap.</p>
-    <button class="btn-login" onclick="netlifyIdentity.open('login')">🔐 Giriş Yap</button>
-    <div class="login-hint">Şifreni mi unuttun? Giriş ekranında <strong>"Forgot password?"</strong> linkine tıkla.</div>
+    <p>Kodbino admin paneline erişmek için Google hesabınla giriş yap.</p>
+    <div id="pass-error" style="color:#ef4444;font-size:.8rem;font-weight:700;min-height:18px;margin-bottom:8px"></div>
+    <button class="btn-login" onclick="girisYap()">
+      <svg width="18" height="18" viewBox="0 0 48 48" style="vertical-align:middle;margin-right:8px"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Google ile Giriş Yap
+    </button>
+    <div class="login-hint">Sadece yetkili Google hesabı giriş yapabilir.</div>
   </div>
 </div>
 
@@ -460,32 +555,12 @@ const VARSAYILAN={
   bolumler:{scratch:[],tinkercad:[],arduino:[],algoritma:[],yapay_zeka:[]},
   hakkimda:{isim:'Öğretmen Adı',unvan:'Kodlama Öğretmeni',biyografi_1:'',biyografi_2:'',dersler:[],eposta:'',sinif:'',mesai:''}
 };
-function veriYukle(){try{return JSON.parse(localStorage.getItem(DEPO))||structuredClone(VARSAYILAN)}catch{return structuredClone(VARSAYILAN)}}
-function veriKaydet(d){localStorage.setItem(DEPO,JSON.stringify(d))}
-let D=veriYukle();
+// veriYukle ve veriKaydet Firebase modülünde tanımlı
+let D = structuredClone(VARSAYILAN);
 
-/* NETLIFY IDENTITY */
-// Invite token veya recovery token varsa widget'ı otomatik aç
-netlifyIdentity.on('init', u => {
-  if(u) panelAc(u);
-});
-
-// Token işleme callback.html tarafından yapılıyor.
-
-netlifyIdentity.on('login',u=>{netlifyIdentity.close();panelAc(u)});
-netlifyIdentity.on('logout',()=>{document.getElementById('panel').style.display='none';document.getElementById('login-screen').style.display='flex'});
-function panelAc(u){
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('panel').style.display='flex';
-  document.getElementById('user-email').textContent=u.email||'Yönetici';
-  ozetYenile();
-}
-function cikisYap(){netlifyIdentity.logout()}
+/* AUTH — Firebase tarafından yönetiliyor (dosyanın başındaki <script type="module"> bloğu) */
 function sifreSifirla(){
-  const u=netlifyIdentity.currentUser();if(!u)return;
-  fetch('/.netlify/identity/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:u.email})})
-    .then(()=>{document.getElementById('sifre-msg').textContent='E-posta gönderildi ✓'})
-    .catch(()=>{document.getElementById('sifre-msg').textContent='E-posta gönderildi (spam klasörünü kontrol et) ✓'});
+  document.getElementById('sifre-msg').textContent='Google hesabın şifresini Google üzerinden yönetebilirsin.';
 }
 
 /* NAVİGASYON */

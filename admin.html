@@ -5,99 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Kodbino</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBWV9SEuGtShSUKQbonekTO8HeGIOJO5w0",
-  authDomain: "kodbino-5fa6f.firebaseapp.com",
-  projectId: "kodbino-5fa6f",
-  storageBucket: "kodbino-5fa6f.firebasestorage.app",
-  messagingSenderId: "912558719816",
-  appId: "1:912558719816:web:7f0d82e40762320816a97d"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
-
-const IZINLI_EMAIL = 'ramazanakyuz89@gmail.com'; // ← Sadece bu e-posta girebilir
-
-// Auth durumu değişince
-onAuthStateChanged(auth, async (user) => {
-  if (user && user.email === IZINLI_EMAIL) {
-    // Yetkili kullanıcı — veriyi Firestore'dan yükle
-    await veriYukleFS(user);
-    panelAc(user);
-  } else if (user) {
-    // Yetkisiz kullanıcı
-    await signOut(auth);
-    loginHata('Bu Google hesabının erişim yetkisi yok.');
-  } else {
-    // Giriş yapılmamış
-    loginEkraniGoster();
-  }
-});
-
-// Google ile giriş
-window.girisYap = async function() {
-  try {
-    await signInWithPopup(auth, provider);
-  } catch(e) {
-    loginHata('Giriş başarısız: ' + e.message);
-  }
-};
-
-// Çıkış
-window.cikisYap = async function() {
-  await signOut(auth);
-};
-
-// Firestore'dan veri yükle
-async function veriYukleFS(user) {
-  try {
-    const ref = doc(db, 'admin', 'icerik');
-    const snap = await getDoc(ref);
-    if (snap.exists()) {
-      D = snap.data();
-    } else {
-      D = structuredClone(VARSAYILAN);
-    }
-  } catch(e) {
-    D = structuredClone(VARSAYILAN);
-  }
-}
-
-// Firestore'a veri kaydet
-window.veriKaydet = async function(d) {
-  try {
-    const ref = doc(db, 'admin', 'icerik');
-    await setDoc(ref, d);
-    D = d;
-  } catch(e) {
-    toast('Kaydetme hatası: ' + e.message);
-  }
-};
-
-function panelAc(user) {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('panel').style.display = 'flex';
-  document.getElementById('user-email').textContent = user.email;
-  sidebarYenile();
-  ozetYenile();
-}
-function loginEkraniGoster() {
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('panel').style.display = 'none';
-}
-function loginHata(msg) {
-  document.getElementById('pass-error').textContent = msg;
-  loginEkraniGoster();
-}
-</script>
 <style>
 :root{
   --purple:#7B61FF; --purple-d:#6d28d9; --purple-l:#ede9fe; --purple-ll:#f5f3ff;
@@ -205,7 +112,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 
 /* Stat */
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
-.stat-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:.2s}
+.stat-card:hover{background:var(--purple-ll);border-color:var(--purple)}
 .stat-num{font-size:1.8rem;font-weight:900;margin-bottom:2px}
 .stat-label{font-size:.75rem;color:var(--muted);font-weight:700}
 
@@ -289,12 +197,14 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 }
 .btn-close:hover{color:var(--purple)}
 
-/* Menü yönetimi */
+/* Menü yönetimi (sürükle-bırak için) */
 .menu-manager{display:flex;flex-direction:column;gap:8px}
 .menu-row{
   background:#fff;border:1px solid var(--border);border-radius:12px;
   padding:12px 14px;display:flex;align-items:center;gap:10px;transition:border-color .15s;
+  cursor:grab; user-select:none;
 }
+.menu-row.dragging{opacity:0.5; cursor:grabbing}
 .menu-row:hover{border-color:rgba(123,97,255,.3)}
 .drag-handle{color:var(--muted);cursor:grab;font-size:1.1rem;flex-shrink:0;padding:0 4px}
 .menu-row-name{font-size:.9rem;font-weight:800;color:var(--navy)}
@@ -313,19 +223,19 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 }
 .menu-edit-btn:hover{background:var(--purple-ll);color:var(--purple)}
 
-/* Şifre */
-.pass-info{
+/* Google Hesap Yönetimi */
+.google-info{
   background:var(--purple-ll);border:1px solid rgba(123,97,255,.2);
   border-radius:12px;padding:14px;font-size:.85rem;color:var(--muted);line-height:1.7;font-weight:600;
 }
-.pass-info strong{color:var(--purple)}
-.btn-pass{
+.google-info strong{color:var(--purple)}
+.btn-google-account{
   background:var(--purple);color:#fff;border:none;border-radius:10px;
   padding:10px 20px;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;
   cursor:pointer;transition:.2s;margin-top:12px;display:inline-block;
   box-shadow:0 3px 12px rgba(123,97,255,.25);
 }
-.btn-pass:hover{background:var(--purple-d)}
+.btn-google-account:hover{background:var(--purple-d)}
 
 /* Dışa aktar */
 .btn-export{
@@ -396,8 +306,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     <button class="nav-item" onclick="goster('site')" id="nav-site">
       <span class="nav-dot" style="background:var(--muted)"></span>Site Bilgileri
     </button>
-    <button class="nav-item" onclick="goster('sifre')" id="nav-sifre">
-      <span class="nav-dot" style="background:var(--muted)"></span>Şifre Değiştir
+    <button class="nav-item" onclick="goster('google')" id="nav-google">
+      <span class="nav-dot" style="background:var(--muted)"></span>Google Hesabı
     </button>
     <button class="nav-item" onclick="goster('disaaktar')" id="nav-disaaktar">
       <span class="nav-dot" style="background:var(--navy)"></span>Dışa Aktar
@@ -416,7 +326,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
       <div class="card"><div class="sec-title">Son Eklenenler</div><div class="item-list" id="son-eklenenler"></div></div>
     </div>
 
-    <!-- DİNAMİK BÖLÜM SAYFASI — tüm menüler buraya render edilir -->
+    <!-- DİNAMİK BÖLÜM SAYFASI -->
     <div class="page" id="page-bolum">
       <div class="page-header">
         <h1 id="bolum-baslik">Bölüm</h1>
@@ -431,7 +341,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 
     <!-- MENÜ YÖNETİMİ -->
     <div class="page" id="page-menuler">
-      <div class="page-header"><h1>Menü Yönetimi</h1><p>Sıra, görünürlük ve isim düzenle</p></div>
+      <div class="page-header"><h1>Menü Yönetimi</h1><p>Sürükle‑bırak ile sırala, isim ve aktiflik düzenle</p></div>
       <div class="card" style="margin-bottom:14px">
         <div class="sec-title" style="margin-bottom:14px">Menüler<button class="btn-new" onclick="yeniMenuModal()">+ Yeni Menü</button></div>
         <div class="menu-manager" id="menu-manager"></div>
@@ -439,8 +349,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
       <div class="card">
         <p style="font-size:.82rem;color:var(--muted);line-height:1.7;font-weight:600">
           <strong style="color:var(--navy)">Aktif / Pasif:</strong> Pasif menüler sitede görünmez.<br>
-          <strong style="color:var(--navy)">Yeni menü:</strong> ID küçük harf ve alt çizgi kullan (ör: web_tasarim).<br>
-          <strong style="color:var(--navy)">Kaydet:</strong> Değişiklik sonrası mutlaka kaydet.
+          <strong style="color:var(--navy)">Sürükle‑bırak:</strong> Menü satırını fareyle tutup yukarı/aşağı taşıyın, sıra otomatik güncellenir.<br>
+          <strong style="color:var(--navy)">Kaydet:</strong> Değişiklik sonrası mutlaka kaydedin.
         </p>
         <div class="form-actions" style="margin-top:14px;padding-top:14px">
           <button class="btn-save" onclick="menuKaydet()">Değişiklikleri Kaydet</button>
@@ -474,13 +384,16 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
       </div>
     </div>
 
-    <!-- ŞİFRE -->
-    <div class="page" id="page-sifre">
-      <div class="page-header"><h1>Şifre Değiştir</h1><p>Netlify Identity üzerinden güvenli şifre yönetimi</p></div>
+    <!-- GOOGLE HESAP YÖNETİMİ (eski şifre sayfası yerine) -->
+    <div class="page" id="page-google">
+      <div class="page-header"><h1>Google Hesabı Yönetimi</h1><p>Hesap bilgilerinizi Google üzerinden güncelleyin</p></div>
       <div class="card" style="max-width:440px">
-        <div class="pass-info">Şifren <strong>Netlify'ın güvenli sunucusunda</strong> saklanır. Butona tıkla, e-postana sıfırlama bağlantısı gelir.</div>
-        <button class="btn-pass" onclick="sifreSifirla()">📧 Şifre Sıfırlama E-postası Gönder</button>
-        <div id="sifre-msg" style="margin-top:10px;font-size:.82rem;color:var(--purple);font-weight:700"></div>
+        <div class="google-info">
+          <strong>🔐 Google ile giriş yapıyorsunuz.</strong><br>
+          Şifre değiştirme, e-posta güncelleme ve diğer hesap işlemleri için Google hesap ayarlarınızı kullanın.
+        </div>
+        <button class="btn-google-account" onclick="window.open('https://myaccount.google.com/', '_blank')">🌐 Google Hesabıma Git</button>
+        <div style="margin-top:16px; font-size:.75rem; color:var(--muted);">Bu panelde şifre değiştirme gerekmez, çünkü kimlik doğrulama Google tarafından sağlanır.</div>
       </div>
     </div>
 
@@ -489,7 +402,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
       <div class="page-header"><h1>Dışa Aktar</h1><p>İndirip GitHub'a yükle → Netlify otomatik günceller</p></div>
       <div class="card">
         <p style="font-size:.88rem;color:var(--muted);margin-bottom:14px;line-height:1.7;font-weight:600">
-          Paneldeki değişiklikler tarayıcında saklanır. <strong style="color:var(--navy)">icerikler.js</strong> dosyasını indirip GitHub reposuna yükle — Netlify otomatik yayına alır.
+          Paneldeki değişiklikler Firebase'e kaydedilir. Yine de yedeğini almak istersen <strong>icerikler.js</strong> dosyasını indirebilirsin.
         </p>
         <button class="btn-export" onclick="disaAktar()">⬇ icerikler.js İndir</button>
         <div class="export-box">
@@ -515,8 +428,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="toast" id="toast"></div>
 
 <script>
-const DEPO='kodbino_icerik';
-const VARSAYILAN={
+// Varsayılan veri
+const VARSAYILAN = {
   site:{baslik:'Kodbino',slogan:'Hayal Et, Kodla, Geliştir!',footer:'© 2026 Kodbino · Birlikte öğreniyoruz!'},
   menuler:[
     {id:'scratch',baslik:'Scratch',aktif:true,sira:1},
@@ -528,26 +441,20 @@ const VARSAYILAN={
   bolumler:{scratch:[],tinkercad:[],arduino:[],algoritma:[],yapay_zeka:[]},
   hakkimda:{isim:'Öğretmen Adı',unvan:'Kodlama Öğretmeni',biyografi_1:'',biyografi_2:'',dersler:[],eposta:'',sinif:'',mesai:''}
 };
-// veriYukle ve veriKaydet Firebase modülünde tanımlı
-let D = structuredClone(VARSAYILAN);
 
-/* AUTH — Firebase tarafından yönetiliyor (dosyanın başındaki <script type="module"> bloğu) */
-function sifreSifirla(){
-  document.getElementById('sifre-msg').textContent='Google hesabın şifresini Google üzerinden yönetebilirsin.';
-}
+let D = structuredClone(VARSAYILAN);  // asıl veri
+
+// Aşağıdaki fonksiyonlar module tarafından çağrılacak
+window.setPanelData = function(data) { D = data; ozetYenile(); sidebarYenile(); if(window._aktifMenu) menuYonetimYenile(); };
+window.getPanelData = function() { return D; };
 
 /* MENÜ RENKLERİ */
-const MENU_RENK = {
-  scratch:'#f97316',tinkercad:'#f59e0b',arduino:'#0ea5a0',
-  algoritma:'#f97316',yapay_zeka:'#8b5cf6'
-};
-const MENU_EMOJI = {
-  scratch:'🐱',tinkercad:'🔧',arduino:'♾',algoritma:'🧩',yapay_zeka:'🤖'
-};
+const MENU_RENK = { scratch:'#f97316',tinkercad:'#f59e0b',arduino:'#0ea5a0', algoritma:'#f97316',yapay_zeka:'#8b5cf6' };
+const MENU_EMOJI = { scratch:'🐱',tinkercad:'🔧',arduino:'♾',algoritma:'🧩',yapay_zeka:'🤖' };
 function menuRenk(id){ return MENU_RENK[id]||'#7B61FF'; }
 function menuEmoji(id){ return MENU_EMOJI[id]||'📌'; }
 
-/* SİDEBAR DİNAMİK */
+/* SİDEBAR */
 function sidebarYenile(){
   const menuler=(D.menuler||[]).sort((a,b)=>a.sira-b.sira);
   document.getElementById('sidebar-menuler').innerHTML = menuler.map(m=>`
@@ -558,7 +465,7 @@ function sidebarYenile(){
     </button>`).join('');
 }
 
-/* BÖLÜM SAYFASI GÖSTER */
+/* BÖLÜM SAYFASI */
 let _aktifBolum = '';
 function bolumGoster(id){
   _aktifBolum = id;
@@ -568,14 +475,12 @@ function bolumGoster(id){
   document.getElementById('page-bolum').classList.add('active');
   const navEl = document.getElementById('nav-'+id);
   if(navEl) navEl.classList.add('active');
-
   document.getElementById('bolum-baslik').textContent = menuEmoji(id)+' '+m.baslik;
   document.getElementById('bolum-aciklama').textContent = m.baslik+' bölümündeki içerikleri yönet';
   document.getElementById('bolum-yeni-btn').onclick = ()=>modalAc(id);
   listeYenile(id);
 }
 
-/* NAVİGASYON */
 function goster(s){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -590,24 +495,20 @@ function goster(s){
   else if(s==='disaaktar') onizlemeGuncelle();
 }
 
-/* ÖZET */
 function ozetYenile(){
   const b=D.bolumler||{};
   const menuler=(D.menuler||[]).sort((a,b)=>a.sira-b.sira);
   document.getElementById('stat-grid').innerHTML=menuler.map(m=>`
-    <div class="stat-card" onclick="bolumGoster('${m.id}')" style="cursor:pointer">
+    <div class="stat-card" onclick="bolumGoster('${m.id}')">
       <div class="stat-num" style="color:${menuRenk(m.id)}">${(b[m.id]||[]).length}</div>
       <div class="stat-label">${menuEmoji(m.id)} ${esc(m.baslik)}</div>
     </div>`).join('');
   const tumIcerik=Object.entries(b).flatMap(([k,v])=>v.map(i=>({...i,bolum:k}))).slice(-6).reverse();
   document.getElementById('son-eklenenler').innerHTML=tumIcerik.length
-    ?tumIcerik.map(i=>`<div class="item-row">
-      <span class="item-badge" style="background:${menuRenk(i.bolum)}22;color:${menuRenk(i.bolum)}">${menuEmoji(i.bolum)} ${esc(i.bolum)}</span>
-      <div style="flex:1"><div class="item-title">${esc(i.baslik)}</div></div></div>`).join('')
+    ?tumIcerik.map(i=>`<div class="item-row"><span class="item-badge" style="background:${menuRenk(i.bolum)}22;color:${menuRenk(i.bolum)}">${menuEmoji(i.bolum)} ${esc(i.bolum)}</span><div style="flex:1"><div class="item-title">${esc(i.baslik)}</div></div></div>`).join('')
     :'<div class="empty">Henüz içerik eklenmedi.</div>';
 }
 
-/* LİSTE */
 function listeYenile(bolum){
   const liste=(D.bolumler||{})[bolum]||[];
   document.getElementById('list-bolum').innerHTML=liste.length
@@ -628,12 +529,9 @@ function modalAc(tip,idx=-1){
   const item=idx===-1?null:(D.bolumler[tip]||[])[idx];
   document.getElementById('modal-baslik').textContent=idx===-1?'Yeni İçerik':'Düzenle';
   const adimlar=item?.adimlar||[];
-  const linkler=tip==='scratch'
-    ?`<div class="form-field"><label>SCRATCH LİNKİ</label><input type="url" id="f-scratch_link" value="${esc(item?.scratch_link||'')}"></div>`
-    :tip==='tinkercad'
-    ?`<div class="form-field"><label>TİNKERCAD LİNKİ</label><input type="url" id="f-tinkercad_link" value="${esc(item?.tinkercad_link||'')}"></div>`
-    :tip==='arduino'
-    ?`<div class="form-field"><label>WOKWİ LİNKİ</label><input type="url" id="f-wokwi_link" value="${esc(item?.wokwi_link||'')}"></div>`
+  const linkler=tip==='scratch'?`<div class="form-field"><label>SCRATCH LİNKİ</label><input type="url" id="f-scratch_link" value="${esc(item?.scratch_link||'')}"></div>`
+    :tip==='tinkercad'?`<div class="form-field"><label>TİNKERCAD LİNKİ</label><input type="url" id="f-tinkercad_link" value="${esc(item?.tinkercad_link||'')}"></div>`
+    :tip==='arduino'?`<div class="form-field"><label>WOKWİ LİNKİ</label><input type="url" id="f-wokwi_link" value="${esc(item?.wokwi_link||'')}"></div>`
     :'';
   document.getElementById('modal-form').innerHTML=`<div class="form-grid">
     <div class="form-field"><label>EMOJİ</label><input type="text" id="f-emoji" value="${esc(item?.emoji||'')}" placeholder="🐱" style="max-width:90px"></div>
@@ -653,7 +551,7 @@ function modalAc(tip,idx=-1){
 }
 function adimSatiri(v='',i=0){return `<div class="step-row" id="step-${i}"><input type="text" value="${esc(v)}" placeholder="Adım ${i+1}"><button class="btn-remove-step" onclick="adimSil(${i})">✕</button></div>`}
 function adimEkle(){const l=document.getElementById('steps-list');const i=l.children.length;l.insertAdjacentHTML('beforeend',adimSatiri('',i))}
-function adimSil(i){const el=document.getElementById('step-'+i);if(el)el.remove();document.querySelectorAll('#steps-list .step-row').forEach((r,j)=>{r.id='step-'+j;r.querySelector('button').setAttribute('onclick',`adimSil(${j})`)})}
+function adimSil(i){const el=document.getElementById('step-'+i);if(el)el.remove();document.querySelectorAll('#steps-list .step-row').forEach((r,j)=>{r.id='step-'+j;r.querySelector('button').setAttribute('onclick',`adimSil(${j})`)});}
 function adimlarTopla(){return[...document.querySelectorAll('#steps-list .step-row input')].map(i=>i.value.trim()).filter(Boolean)}
 function kaydet(){
   if(!D.bolumler)D.bolumler={};if(!D.bolumler[_tip])D.bolumler[_tip]=[];
@@ -667,77 +565,208 @@ function kaydet(){
   if(_tip==='tinkercad') item.tinkercad_link=g('f-tinkercad_link');
   if(_tip==='arduino') item.wokwi_link=g('f-wokwi_link');
   if(_idx===-1) D.bolumler[_tip].push(item); else D.bolumler[_tip][_idx]=item;
-  veriKaydet(D);modalKapat(null,true);listeYenile(_tip);ozetYenile();toast('Kaydedildi ✓');
+  veriKaydet(D); modalKapat(null,true); listeYenile(_tip); ozetYenile(); toast('Kaydedildi ✓');
 }
 function sil(bolum,idx){
   if(!confirm('Silmek istediğine emin misin?'))return;
-  D.bolumler[bolum].splice(idx,1);veriKaydet(D);listeYenile(bolum);ozetYenile();toast('Silindi.');
+  D.bolumler[bolum].splice(idx,1); veriKaydet(D); listeYenile(bolum); ozetYenile(); toast('Silindi.');
 }
-function modalKapat(e,force){if(force||(e&&e.target===document.getElementById('modal-overlay')))document.getElementById('modal-overlay').classList.remove('open')}
+function modalKapat(e,force){if(force||(e&&e.target===document.getElementById('modal-overlay'))) document.getElementById('modal-overlay').classList.remove('open');}
 
-/* MENÜ YÖNETİMİ */
+/* MENÜ YÖNETİMİ (SÜRÜKLE-BIRAK) */
+let dragSrcIndex = null;
 function menuYonetimYenile(){
   const menuler=(D.menuler||[]).sort((a,b)=>a.sira-b.sira);
-  document.getElementById('menu-manager').innerHTML=menuler.map((m,i)=>`
-    <div class="menu-row">
+  const html = menuler.map((m,i)=>`
+    <div class="menu-row" draggable="true" data-index="${i}">
       <span class="drag-handle">⠿</span>
       <div style="flex:1"><div class="menu-row-name">${esc(m.baslik)}</div><div class="menu-row-id">${m.id}</div></div>
-      <button class="toggle-btn ${m.aktif!==false?'on':'off'}" onclick="menuToggle(${i})">${m.aktif!==false?'Aktif':'Pasif'}</button>
-      <button class="menu-edit-btn" onclick="menuDuzenle(${i})">Düzenle</button>
+      <button class="toggle-btn ${m.aktif!==false?'on':'off'}" onclick="event.stopPropagation(); menuToggle(${i})">${m.aktif!==false?'Aktif':'Pasif'}</button>
+      <button class="menu-edit-btn" onclick="event.stopPropagation(); menuDuzenle(${i})">Düzenle</button>
     </div>`).join('');
+  const container = document.getElementById('menu-manager');
+  container.innerHTML = html;
+  // Sürükle-bırak olayları
+  const rows = container.querySelectorAll('.menu-row');
+  rows.forEach(row => {
+    row.addEventListener('dragstart', handleDragStart);
+    row.addEventListener('dragover', handleDragOver);
+    row.addEventListener('drop', handleDrop);
+    row.addEventListener('dragend', handleDragEnd);
+  });
 }
-function menuToggle(i){const m=(D.menuler||[]).sort((a,b)=>a.sira-b.sira)[i];if(m)m.aktif=!m.aktif;menuYonetimYenile();toast('Değiştirildi — kaydetmeyi unutma!')}
+function handleDragStart(e) {
+  dragSrcIndex = parseInt(e.target.closest('.menu-row').dataset.index);
+  e.dataTransfer.effectAllowed = 'move';
+}
+function handleDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+}
+function handleDrop(e) {
+  e.preventDefault();
+  const targetRow = e.target.closest('.menu-row');
+  if(!targetRow) return;
+  const targetIndex = parseInt(targetRow.dataset.index);
+  if(dragSrcIndex === targetIndex) return;
+  // Sıralamayı değiştir
+  const menuler = (D.menuler || []).sort((a,b)=>a.sira-b.sira);
+  const [moved] = menuler.splice(dragSrcIndex, 1);
+  menuler.splice(targetIndex, 0, moved);
+  // Sira numaralarını güncelle
+  menuler.forEach((m, idx) => m.sira = idx + 1);
+  D.menuler = menuler;
+  menuYonetimYenile();
+  toast('Sıra değişti — kaydetmeyi unutma!');
+}
+function handleDragEnd(e) { dragSrcIndex = null; }
+function menuToggle(i){
+  const menuler = (D.menuler||[]).sort((a,b)=>a.sira-b.sira);
+  if(menuler[i]) menuler[i].aktif = !menuler[i].aktif;
+  menuYonetimYenile();
+  toast('Değiştirildi — kaydetmeyi unutma!');
+}
 function menuDuzenle(i){
-  const m=(D.menuler||[]).sort((a,b)=>a.sira-b.sira)[i];if(!m)return;
-  const y=prompt('Menü ismi:',m.baslik);
-  if(y&&y.trim()){m.baslik=y.trim();menuYonetimYenile();toast('İsim güncellendi — kaydetmeyi unutma!')}
+  const menuler = (D.menuler||[]).sort((a,b)=>a.sira-b.sira);
+  if(!menuler[i]) return;
+  const y = prompt('Menü ismi:', menuler[i].baslik);
+  if(y && y.trim()){ menuler[i].baslik = y.trim(); menuYonetimYenile(); toast('İsim güncellendi — kaydetmeyi unutma!'); }
 }
 function yeniMenuModal(){
-  const id=prompt('Menü ID (küçük harf, alt çizgi ile, örn: web_tasarim):');
-  if(!id||!id.trim())return;
-  const temizId=id.trim().toLowerCase().replace(/\s+/g,'_');
-  const baslik=prompt('Menü başlığı:');
-  if(!baslik||!baslik.trim())return;
-  if(!D.menuler)D.menuler=[];if(!D.bolumler)D.bolumler={};
-  const maxSira=Math.max(0,...D.menuler.map(m=>m.sira||0));
-  D.menuler.push({id:temizId,baslik:baslik.trim(),aktif:true,sira:maxSira+1});
-  D.bolumler[temizId]=[];
-  menuYonetimYenile();toast(`"${baslik}" menüsü eklendi!`);
+  const id = prompt('Menü ID (küçük harf, alt çizgi ile, örn: web_tasarim):');
+  if(!id || !id.trim()) return;
+  const temizId = id.trim().toLowerCase().replace(/\s+/g,'_');
+  const baslik = prompt('Menü başlığı:');
+  if(!baslik || !baslik.trim()) return;
+  if(!D.menuler) D.menuler = [];
+  if(!D.bolumler) D.bolumler = {};
+  const maxSira = Math.max(0, ...D.menuler.map(m=>m.sira||0));
+  D.menuler.push({id:temizId, baslik:baslik.trim(), aktif:true, sira:maxSira+1});
+  D.bolumler[temizId] = [];
+  menuYonetimYenile();
+  toast(`"${baslik}" menüsü eklendi!`);
 }
-function menuKaydet(){veriKaydet(D);sidebarYenile();ozetYenile();toast('Menü değişiklikleri kaydedildi ✓')}
+function menuKaydet(){ veriKaydet(D); sidebarYenile(); ozetYenile(); toast('Menü değişiklikleri kaydedildi ✓'); }
 
 /* SİTE BİLGİLERİ */
 function siteBilgYukle(){
-  const s=D.site||{},h=D.hakkimda||{};
-  sv('s-baslik',s.baslik);sv('s-slogan',s.slogan);
-  sv('h-isim',h.isim);sv('h-unvan',h.unvan);sv('h-bio1',h.biyografi_1);sv('h-bio2',h.biyografi_2);
-  sv('h-eposta',h.eposta);sv('h-sinif',h.sinif);sv('h-mesai',h.mesai);
+  const s=D.site||{}, h=D.hakkimda||{};
+  sv('s-baslik',s.baslik); sv('s-slogan',s.slogan);
+  sv('h-isim',h.isim); sv('h-unvan',h.unvan); sv('h-bio1',h.biyografi_1); sv('h-bio2',h.biyografi_2);
+  sv('h-eposta',h.eposta); sv('h-sinif',h.sinif); sv('h-mesai',h.mesai);
   sv('h-dersler',(h.dersler||[]).join(', '));
 }
 function siteBilgKaydet(){
-  if(!D.site)D.site={};if(!D.hakkimda)D.hakkimda={};
-  D.site.baslik=g('s-baslik');D.site.slogan=g('s-slogan');
-  D.hakkimda.isim=g('h-isim');D.hakkimda.unvan=g('h-unvan');D.hakkimda.biyografi_1=g('h-bio1');D.hakkimda.biyografi_2=g('h-bio2');
-  D.hakkimda.eposta=g('h-eposta');D.hakkimda.sinif=g('h-sinif');D.hakkimda.mesai=g('h-mesai');
-  D.hakkimda.dersler=g('h-dersler').split(',').map(s=>s.trim()).filter(Boolean);
-  veriKaydet(D);toast('Site bilgileri kaydedildi ✓');
+  if(!D.site) D.site={}; if(!D.hakkimda) D.hakkimda={};
+  D.site.baslik = g('s-baslik'); D.site.slogan = g('s-slogan');
+  D.hakkimda.isim = g('h-isim'); D.hakkimda.unvan = g('h-unvan'); D.hakkimda.biyografi_1 = g('h-bio1'); D.hakkimda.biyografi_2 = g('h-bio2');
+  D.hakkimda.eposta = g('h-eposta'); D.hakkimda.sinif = g('h-sinif'); D.hakkimda.mesai = g('h-mesai');
+  D.hakkimda.dersler = g('h-dersler').split(',').map(s=>s.trim()).filter(Boolean);
+  veriKaydet(D); toast('Site bilgileri kaydedildi ✓');
 }
 
-/* DIŞA AKTARMA */
-function onizlemeGuncelle(){document.getElementById('export-preview').textContent='const ICERIK = '+JSON.stringify(D,null,2).slice(0,500)+'...'}
+/* DIŞA AKTAR */
+function onizlemeGuncelle(){ document.getElementById('export-preview').textContent = 'const ICERIK = '+JSON.stringify(D,null,2).slice(0,500)+'...'; }
 function disaAktar(){
-  const blob=new Blob(['/* Kodbino — Admin panelinden oluşturuldu */\nconst ICERIK = '+JSON.stringify(D,null,2)+';'],{type:'text/javascript'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='icerikler.js';a.click();
+  const blob = new Blob(['/* Kodbino — Admin panelinden oluşturuldu */\nconst ICERIK = '+JSON.stringify(D,null,2)+';'], {type:'text/javascript'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'icerikler.js'; a.click();
   toast('icerikler.js indirildi ✓');
 }
 
 /* YARDIMCI */
-function g(id){const el=document.getElementById(id);return el?(el.value||'').trim():''}
-function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||''}
-function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML}
+function g(id){ const el=document.getElementById(id); return el? (el.value||'').trim():''; }
+function sv(id,val){ const el=document.getElementById(id); if(el) el.value = val||''; }
+function esc(s){ const d=document.createElement('div'); d.textContent=String(s||''); return d.innerHTML; }
 let _tt;
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2500)}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')modalKapat(null,true)});
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),2500); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') modalKapat(null,true); });
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBWV9SEuGtShSUKQbonekTO8HeGIOJO5w0",
+  authDomain: "kodbino-5fa6f.firebaseapp.com",
+  projectId: "kodbino-5fa6f",
+  storageBucket: "kodbino-5fa6f.firebasestorage.app",
+  messagingSenderId: "912558719816",
+  appId: "1:912558719816:web:7f0d82e40762320816a97d"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+const IZINLI_EMAIL = 'ramazanakyuz89@gmail.com';
+
+// Veriyi Firestore'dan al ve global D'yi güncelle
+async function veriYukleFS() {
+  try {
+    const ref = doc(db, 'admin', 'icerik');
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      window.setPanelData(snap.data());
+    } else {
+      window.setPanelData(structuredClone(VARSAYILAN));
+    }
+  } catch(e) {
+    console.error(e);
+    window.setPanelData(structuredClone(VARSAYILAN));
+  }
+}
+
+window.veriKaydet = async function(d) {
+  try {
+    const ref = doc(db, 'admin', 'icerik');
+    await setDoc(ref, d);
+    window.setPanelData(d);
+    toast('Firebase\'e kaydedildi ✓');
+  } catch(e) {
+    toast('Kaydetme hatası: ' + e.message);
+  }
+};
+
+window.girisYap = async function() {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    loginHata('Giriş başarısız: ' + e.message);
+  }
+};
+window.cikisYap = async function() { await signOut(auth); };
+
+function panelAc(user) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('panel').style.display = 'flex';
+  document.getElementById('user-email').textContent = user.email;
+  veriYukleFS().then(() => {
+    sidebarYenile();
+    ozetYenile();
+    menuYonetimYenile();
+  });
+}
+function loginEkraniGoster() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('panel').style.display = 'none';
+}
+function loginHata(msg) {
+  document.getElementById('pass-error').textContent = msg;
+  loginEkraniGoster();
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (user && user.email === IZINLI_EMAIL) {
+    panelAc(user);
+  } else if (user) {
+    await signOut(auth);
+    loginHata('Bu Google hesabının erişim yetkisi yok.');
+  } else {
+    loginEkraniGoster();
+  }
+});
 </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Kodbino — Hayal Et, Kodla, Geliştir!</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -21,7 +21,7 @@ body{
   border-radius: 6px;
 }
 
-/* ══ HEADER (sadece logo) ══ */
+/* ══ HEADER (logo + desktop menü) ══ */
 .header-outer{
   padding:12px 24px;
   display:flex;
@@ -36,31 +36,31 @@ body{
 .header-pill{
   background:#fff;
   border-radius:50px;
-  padding:8px 10px 8px 16px;
+  padding:8px 16px 8px 20px;
   display:flex;
   align-items:center;
-  gap:8px;
+  justify-content:space-between;
   box-shadow:0 4px 24px rgba(100,80,200,0.13);
   width:100%;
-  max-width:1100px;
+  max-width:1200px;
 }
 .logo{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
   text-decoration:none;
-  margin-right:auto;
 }
 .logo-robot{
-  width:44px;height:44px;
+  width:52px;
+  height:52px;
   display:flex;
   align-items:center;
   justify-content:center;
 }
-.logo-robot svg{width:44px;height:44px}
+.logo-robot svg{width:52px;height:52px}
 .logo-wordmark{
   font-family:'Nunito',sans-serif;
-  font-size:2rem;
+  font-size:2.2rem;
   font-weight:900;
   letter-spacing:-0.5px;
   display:flex;
@@ -73,15 +73,92 @@ body{
 .ln{color:#F6C431}
 .lo{color:#FF8A1F}
 
-/* ══ HERO (sade metin + buton) ══ */
+/* Desktop menü */
+.nav-menu {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.nav-menu a {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #1a1f6e;
+  text-decoration: none;
+  padding: 8px 18px;
+  border-radius: 40px;
+  transition: 0.2s;
+}
+.nav-menu a:hover {
+  background: rgba(123,97,255,0.1);
+  color: #7B61FF;
+}
+
+/* Hamburger butonu (mobilde görünür) */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #1a1f6e;
+  padding: 8px;
+  line-height: 1;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.hamburger:hover {
+  background: rgba(123,97,255,0.1);
+}
+
+/* Mobil menü */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 76px;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  padding: 20px;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 99;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.mobile-nav a {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1a1f6e;
+  text-decoration: none;
+  padding: 10px 16px;
+  border-radius: 40px;
+  transition: 0.2s;
+  display: block;
+}
+.mobile-nav a:hover {
+  background: rgba(123,97,255,0.1);
+  color: #7B61FF;
+}
+.mobile-nav.show {
+  display: flex;
+}
+
+/* ══ HERO (iki sütun) ══ */
 .hero{
-  max-width:1100px;
+  max-width:1200px;
   margin:0 auto;
-  padding:60px 40px 48px;
-  text-align:center;
+  padding:50px 40px 40px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:40px;
+}
+.hero-left{
+  text-align:left;
 }
 .hero-h1{
-  font-size:clamp(2.5rem,6vw,4.2rem);
+  font-size:clamp(2.5rem,5vw,4rem);
   font-weight:900;
   line-height:1.1;
   letter-spacing:-1.5px;
@@ -89,13 +166,17 @@ body{
 }
 .h-dark{color:#1a1f6e;display:block}
 .h-purple{color:#7B61FF;display:block;position:relative}
-.h-underline{
-  display:block;
-  height:6px;
-  width:170px;
-  background:linear-gradient(90deg,#f59e0b,#f97316);
-  border-radius:4px;
-  margin:5px auto 0;
+/* Dalgalı çizgi - elle çizilmiş efekti */
+.wavy-underline {
+  display: block;
+  width: 180px;
+  height: 12px;
+  margin-top: 6px;
+}
+.wavy-underline svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 .h-green{color:#22c55e;display:block}
 .hero-sub{
@@ -103,13 +184,12 @@ body{
   font-weight:600;
   color:#6b7280;
   line-height:1.6;
-  margin:20px auto 30px;
-  max-width:600px;
+  margin:20px 0 30px;
+  max-width:450px;
 }
 .hero-btns{
   display:flex;
-  justify-content:center;
-  gap:20px;
+  gap:16px;
   flex-wrap:wrap;
 }
 .btn-kesfet{
@@ -121,31 +201,137 @@ body{
   font-family:'Nunito',sans-serif;
   font-size:1rem;
   font-weight:800;
-  padding:14px 28px;
-  border-radius:16px;
+  padding:12px 28px;
+  border-radius:40px;
   border:none;
   cursor:pointer;
   text-decoration:none;
-  box-shadow:0 4px 18px rgba(123,97,255,.38);
   transition:.2s;
+  box-shadow:0 4px 14px rgba(123,97,255,0.3);
 }
 .btn-kesfet:hover{
   background:#6d28d9;
   transform:translateY(-2px);
-  box-shadow:0 6px 24px rgba(123,97,255,.48);
-}
-.btn-kesfet-ico{
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  background:rgba(255,255,255,.22);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:.95rem;
 }
 
-/* ══ DISCOVER ══ */
+/* Sağ taraf: sadece laptop screen */
+.hero-right{
+  position:relative;
+  min-height: 460px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.laptop-screen{
+  position:relative;
+  width:100%;
+  max-width:460px;
+  background:#1e1e2e;
+  border-radius:24px;
+  box-shadow:0 25px 45px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+  overflow:hidden;
+  animation:float 5s ease-in-out infinite;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0px)}
+  50%{transform:translateY(-12px)}
+}
+.screen-header{
+  background:#2a2a3e;
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+}
+.dot-red{background:#ff5f5f}
+.dot-yellow{background:#ffbd2e}
+.dot-green{background:#28c840}
+.screen-title{
+  margin-left:auto;
+  font-size:0.7rem;
+  color:#aaa;
+  font-family:monospace;
+  font-weight:700;
+}
+.code-area{
+  padding:20px;
+  font-family:'Fira Code', 'Courier New', monospace;
+  font-size:0.8rem;
+  line-height:1.6;
+  color:#cdd6f4;
+}
+.code-line{
+  opacity:0;
+  animation:codeFade 0.4s forwards;
+}
+.code-line:nth-child(1){animation-delay:0.1s}
+.code-line:nth-child(2){animation-delay:0.3s}
+.code-line:nth-child(3){animation-delay:0.5s}
+.code-line:nth-child(4){animation-delay:0.7s}
+.code-line:nth-child(5){animation-delay:0.9s}
+.code-line:nth-child(6){animation-delay:1.1s}
+@keyframes codeFade{
+  to{opacity:1}
+}
+.kw{color:#cba6f7}
+.fn{color:#89b4fa}
+.str{color:#a6e3a1}
+.comment{color:#6c7086}
+.block{
+  display:inline-block;
+  background:#313244;
+  padding:2px 6px;
+  border-radius:8px;
+  margin:0 2px;
+}
+.output{
+  margin:12px 20px 20px;
+  background:#313244;
+  border-radius:12px;
+  padding:10px 14px;
+  display:flex;
+  gap:10px;
+  font-family:monospace;
+  font-size:0.75rem;
+}
+.output span:first-child{color:#6c7086; font-weight:700}
+.output span:last-child{color:#a6e3a1; font-weight:600}
+
+/* Responsive */
+@media(max-width:900px){
+  .hero{
+    grid-template-columns:1fr;
+    text-align:center;
+    gap:30px;
+  }
+  .hero-left{text-align:center}
+  .hero-sub{margin-left:auto;margin-right:auto}
+  .wavy-underline{margin-left:auto;margin-right:auto}
+  .hero-btns{justify-content:center}
+}
+@media(max-width:780px){
+  .nav-menu {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+}
+@media(max-width:680px){
+  .hero-right{
+    display: none;
+  }
+  .hero{
+    padding:30px 20px;
+  }
+}
+
+/* Diğer bölümler (kartlar, features, footer) aynen */
 .discover{
   max-width:1100px;
   margin:0 auto;
@@ -178,8 +364,6 @@ body{
   border-radius:50%;
   background:#7B61FF;
 }
-
-/* Kartlar */
 .cards{
   display:grid;
   grid-template-columns:repeat(5,1fr);
@@ -244,8 +428,6 @@ body{
   width:16px;
   height:16px;
 }
-
-/* ══ FEATURES (4 özellik) ══ */
 .features{
   padding:0 40px 56px;
 }
@@ -305,8 +487,47 @@ body{
   color:#9ca3af;
   line-height:1.5;
 }
-
-/* ══ FOOTER (sadece logo + telif) ══ */
+#about-section {
+  display: none;
+  max-width: 900px;
+  margin: 20px auto 40px;
+  padding: 0 20px;
+}
+.about-card {
+  background: white;
+  border-radius: 28px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  border: 1px solid rgba(123,97,255,0.2);
+}
+.about-card h2 {
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  color: #1a1f6e;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 16px;
+}
+.about-item {
+  background: #f8faff;
+  padding: 12px 16px;
+  border-radius: 16px;
+}
+.about-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #7B61FF;
+  letter-spacing: 0.5px;
+}
+.about-value {
+  font-weight: 800;
+  margin-top: 5px;
+  color: #1a1f6e;
+}
 footer{
   background:#fff;
   border-top:1px solid rgba(0,0,0,.06);
@@ -328,8 +549,6 @@ footer{
   align-items:center;
   gap:4px;
 }
-
-/* ══ MODAL (içerik detayları için) ══ */
 .modal-overlay{
   display:none;
   position:fixed;
@@ -502,8 +721,6 @@ footer{
   opacity:1;
   transform:translateY(0);
 }
-
-/* ══ RESPONSIVE ══ */
 @media(max-width:980px){
   .cards{
     grid-template-columns:repeat(3,1fr);
@@ -523,9 +740,6 @@ footer{
   .features-container{
     grid-template-columns:1fr;
   }
-  .hero{
-    padding:40px 20px;
-  }
   .modal{
     padding:20px;
   }
@@ -534,17 +748,20 @@ footer{
     text-align:center;
     padding:18px 24px;
   }
+  .about-grid{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
 <body>
 
-<!-- ══ HEADER (sadece logo) ══ -->
+<!-- HEADER -->
 <div class="header-outer">
   <div class="header-pill">
     <a class="logo" href="#">
       <div class="logo-robot">
-        <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <svg width="52" height="52" viewBox="0 0 44 44" fill="none">
           <ellipse cx="22" cy="4" rx="4.5" ry="6" fill="#74C043" transform="rotate(-8 22 4)"/>
           <ellipse cx="25" cy="3" rx="3" ry="4.5" fill="#5aaa2e" transform="rotate(-8 25 3)" opacity=".7"/>
           <rect x="21" y="7" width="2" height="5" rx="1" fill="#d1d5db"/>
@@ -564,25 +781,64 @@ footer{
         <span class="lk">kod</span><span class="lb">b</span><span class="li">i</span><span class="ln">n</span><span class="lo">o</span>
       </div>
     </a>
+    <div class="nav-menu" id="desktopNav"></div>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Menü">☰</button>
   </div>
 </div>
 
-<!-- ══ HERO (sadece metin + Hemen Keşfet butonu) ══ -->
+<!-- Mobil menü -->
+<div class="mobile-nav" id="mobileNav"></div>
+
+<!-- HERO -->
 <section class="hero">
-  <h1 class="hero-h1">
-    <span class="h-dark">Hayal Et,</span>
-    <span class="h-purple">Kodla,<span class="h-underline"></span></span>
-    <span class="h-green">Geliştir!</span>
-  </h1>
-  <p class="hero-sub" id="heroSub">8–15 yaş arası çocuklar için eğlenceli<br>kodlama ve teknoloji platformu.</p>
-  <div class="hero-btns">
-    <a class="btn-kesfet" href="#discover">
-      <span class="btn-kesfet-ico">🚀</span>Hemen Keşfet
-    </a>
+  <div class="hero-left">
+    <h1 class="hero-h1">
+      <span class="h-dark">Hayal Et,</span>
+      <span class="h-purple">Kodla,</span>
+      <span class="wavy-underline">
+        <svg viewBox="0 0 180 12" preserveAspectRatio="none">
+          <path d="M0,6 Q10,2 20,6 T40,6 T60,6 T80,6 T100,6 T120,6 T140,6 T160,6 T180,6" 
+                stroke="#f59e0b" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M2,8 Q12,4 22,8 T42,8 T62,8 T82,8 T102,8 T122,8 T142,8 T162,8 T182,8" 
+                stroke="#f97316" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+        </svg>
+      </span>
+      <span class="h-green">Geliştir!</span>
+    </h1>
+    <p class="hero-sub" id="heroSub">8–15 yaş arası çocuklar için eğlenceli<br>kodlama ve teknoloji platformu.</p>
+    <div class="hero-btns">
+      <a class="btn-kesfet" href="#discover">
+        <span>🚀</span> Hemen Keşfet
+      </a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="laptop-screen">
+      <div class="screen-header">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        <span class="screen-title">kodbino / scratch_blocks.txt</span>
+      </div>
+      <div class="code-area">
+        <div class="code-line"><span class="comment">// Scratch ve mBlock örnekleri</span></div>
+        <div class="code-line"><span class="kw">when</span> <span class="block">🏁 yeşil bayrak tıklanınca</span></div>
+        <div class="code-line">    <span class="fn">tekrarla</span> <span class="num">10</span> <span class="kw">kere</span></div>
+        <div class="code-line">        <span class="block">🐾 10 adım git</span></div>
+        <div class="code-line">        <span class="block">💬 "Hayal Et" de</span></div>
+        <div class="code-line"><span class="kw">when</span> <span class="block">🔘 buton A basıldığında</span></div>
+        <div class="code-line">    <span class="fn">dijital_pin</span> <span class="num">13</span> <span class="kw">yüksek</span> yap</div>
+        <div class="code-line">    <span class="block">✨ "Kodla" göster</span></div>
+      </div>
+      <div class="output">
+        <span>▶ Çıktı:</span>
+        <span>Hayal Et, Kodla, Geliştir!</span>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ══ DISCOVER (dinamik kartlar) ══ -->
+<!-- DISCOVER -->
 <section class="discover" id="discover">
   <div class="disc-title">
     <span class="disc-line"></span>
@@ -596,7 +852,7 @@ footer{
   </div>
 </section>
 
-<!-- ══ FEATURES (4 özellik) ══ -->
+<!-- FEATURES -->
 <section class="features">
   <div class="features-container">
     <div class="feat">
@@ -638,6 +894,25 @@ footer{
   </div>
 </section>
 
+<!-- HAKKIMIZDA -->
+<section id="about-section">
+  <div class="about-card">
+    <h2>🧑‍🏫 Hakkımızda</h2>
+    <div class="about-grid">
+      <div class="about-item"><div class="about-label">İsim</div><div class="about-value" id="about-name">-</div></div>
+      <div class="about-item"><div class="about-label">Ünvan</div><div class="about-value" id="about-title">-</div></div>
+      <div class="about-item"><div class="about-label">E-posta</div><div class="about-value" id="about-email">-</div></div>
+      <div class="about-item"><div class="about-label">Sınıf / Mesai</div><div class="about-value" id="about-class">-</div></div>
+      <div class="about-item"><div class="about-label">Dersler</div><div class="about-value" id="about-lessons">-</div></div>
+    </div>
+    <div style="margin-top: 20px;">
+      <div class="about-label">Biyografi</div>
+      <p id="about-bio1" style="margin-top: 8px; line-height: 1.6;"></p>
+      <p id="about-bio2" style="margin-top: 12px; line-height: 1.6;"></p>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="footer-logo">
     <span class="lk">kod</span><span class="lb">b</span><span class="li">i</span><span class="ln">n</span><span class="lo">o</span> 🌱
@@ -645,18 +920,16 @@ footer{
   <span id="footer-text">© 2026 Kodbino · Birlikte öğreniyoruz!</span>
 </footer>
 
-<!-- MODAL -->
+<!-- Modal -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <button class="modal-close" id="modal-close">✕</button>
     <div id="modal-content"></div>
   </div>
 </div>
-
 <div id="toastMsg" class="toast-msg"></div>
 
 <script>
-// Yardımcı fonksiyonlar
 function esc(s){
   const d=document.createElement('div');
   d.textContent=String(s||'');
@@ -669,7 +942,6 @@ function toast(msg){
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-// Kart görselleri (PNG'deki gibi emoji + renkler)
 const CC={
   scratch:{r:'#f97316',bg:'#fff8f0',isim:'Scratch',desc:'Kendi oyunlarını ve animasyonlarını yap!',
     svg:`<svg width="58" height="58" viewBox="0 0 58 58" fill="none"><circle cx="29" cy="33" r="19" fill="#f97316"/><circle cx="29" cy="31" r="17" fill="#ffa94d"/><polygon points="15,19 11,9 21,16" fill="#f97316"/><polygon points="43,19 47,9 37,16" fill="#f97316"/><polygon points="15,19 13,12 20,17" fill="#ffd6a5"/><polygon points="43,19 45,12 38,17" fill="#ffd6a5"/><ellipse cx="23" cy="28" rx="4" ry="4.5" fill="#fff"/><ellipse cx="35" cy="28" rx="4" ry="4.5" fill="#fff"/><circle cx="24" cy="29" r="2.2" fill="#1a1f6e"/><circle cx="36" cy="29" r="2.2" fill="#1a1f6e"/><circle cx="24.8" cy="27.8" r=".9" fill="#fff"/><circle cx="36.8" cy="27.8" r=".9" fill="#fff"/><ellipse cx="29" cy="35" rx="2.8" ry="1.8" fill="#e05a00"/><path d="M24 38 Q29 43 34 38" stroke="#e05a00" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="9" y1="33" x2="23" y2="34.5" stroke="#c0440a" stroke-width="1.2" stroke-linecap="round"/><line x1="9" y1="37" x2="23" y2="36" stroke="#c0440a" stroke-width="1.2" stroke-linecap="round"/><line x1="49" y1="33" x2="35" y2="34.5" stroke="#c0440a" stroke-width="1.2" stroke-linecap="round"/><line x1="49" y1="37" x2="35" y2="36" stroke="#c0440a" stroke-width="1.2" stroke-linecap="round"/></svg>`},
@@ -690,7 +962,56 @@ function ikonHTML(id, c){
   return c.svg||'<span style="font-size:2.5rem">📌</span>';
 }
 
-// Kartları göster
+function buildMenus(menuler){
+  const desktopNav = document.getElementById('desktopNav');
+  const mobileContainer = document.getElementById('mobileNav');
+  if(!desktopNav || !mobileContainer) return;
+  desktopNav.innerHTML = '';
+  mobileContainer.innerHTML = '';
+  // Ana sayfa
+  const homeLink = document.createElement('a');
+  homeLink.href = '#';
+  homeLink.textContent = 'Ana Sayfa';
+  homeLink.addEventListener('click', (e)=>{
+    e.preventDefault();
+    window.scrollTo({top:0, behavior:'smooth'});
+    mobileContainer.classList.remove('show');
+  });
+  desktopNav.appendChild(homeLink);
+  const mobileHome = homeLink.cloneNode(true);
+  mobileContainer.appendChild(mobileHome);
+  // Dinamik dersler
+  const aktifMenuler = (menuler||[]).filter(m=>m.aktif!==false).sort((a,b)=>a.sira-b.sira);
+  aktifMenuler.forEach(menu=>{
+    const a = document.createElement('a');
+    a.href = `#${menu.id}`;
+    a.textContent = menu.baslik;
+    a.addEventListener('click', (e)=>{
+      e.preventDefault();
+      bolumListesiAc(menu.id);
+      mobileContainer.classList.remove('show');
+    });
+    desktopNav.appendChild(a);
+    const mobileA = a.cloneNode(true);
+    mobileContainer.appendChild(mobileA);
+  });
+  // Hakkımızda (Araçlar yok)
+  const aboutLink = document.createElement('a');
+  aboutLink.href = '#about-section';
+  aboutLink.textContent = 'Hakkımızda';
+  aboutLink.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const aboutSec = document.getElementById('about-section');
+    if(aboutSec){
+      aboutSec.style.display = 'block';
+      aboutSec.scrollIntoView({ behavior: 'smooth' });
+    }
+    mobileContainer.classList.remove('show');
+  });
+  desktopNav.appendChild(aboutLink);
+  mobileContainer.appendChild(aboutLink.cloneNode(true));
+}
+
 function kartsGoster(menuler, bolumler){
   const grid = document.getElementById('cards-grid');
   if(!grid) return;
@@ -712,7 +1033,6 @@ function kartsGoster(menuler, bolumler){
       </button>
     </div>`;
   }).join('');
-  // Tıklama olayları
   document.querySelectorAll('.kart').forEach(el=>{
     const btn = el.querySelector('.kart-btn');
     const id = el.dataset.id;
@@ -725,7 +1045,6 @@ function kartsGoster(menuler, bolumler){
   });
 }
 
-// Modal ve içerik listeleme
 function bolumListesiAc(id){
   const liste = (window.ICERIK?.bolumler||{})[id] || [];
   const c = CC[id] || {r:'#7B61FF',isim:id};
@@ -790,11 +1109,41 @@ function closeModal(e, force){
   }
 }
 
-// Sayfa yükleme ve Firebase
+function initAbout(){
+  window.loadAboutData = function(hakkimda){
+    if(!hakkimda) return;
+    document.getElementById('about-name').innerText = hakkimda.isim || '-';
+    document.getElementById('about-title').innerText = hakkimda.unvan || '-';
+    document.getElementById('about-email').innerText = hakkimda.eposta || '-';
+    document.getElementById('about-class').innerText = `${hakkimda.sinif || ''} ${hakkimda.mesai || ''}`.trim() || '-';
+    document.getElementById('about-lessons').innerText = (hakkimda.dersler || []).join(', ') || '-';
+    document.getElementById('about-bio1').innerText = hakkimda.biyografi_1 || '';
+    document.getElementById('about-bio2').innerText = hakkimda.biyografi_2 || '';
+  };
+}
+
+function initHamburger(){
+  const hamburger = document.getElementById('hamburgerBtn');
+  const mobileNav = document.getElementById('mobileNav');
+  if(hamburger && mobileNav){
+    hamburger.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      mobileNav.classList.toggle('show');
+    });
+    document.addEventListener('click', (e)=>{
+      if(!mobileNav.contains(e.target) && !hamburger.contains(e.target)){
+        mobileNav.classList.remove('show');
+      }
+    });
+  }
+}
+
 window.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('modal-overlay').addEventListener('click', closeModal);
   document.getElementById('modal-close').addEventListener('click', ()=>closeModal(null,true));
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(null,true); });
+  initHamburger();
+  initAbout();
 });
 </script>
 
@@ -818,11 +1167,11 @@ try {
   if(!window.ICERIK.menuler) window.ICERIK.menuler = [];
   if(!window.ICERIK.bolumler) window.ICERIK.bolumler = {};
   if(!window.ICERIK.site) window.ICERIK.site = {};
-  // Footer metni
   if(window.ICERIK.site?.footer) document.getElementById('footer-text').textContent = window.ICERIK.site.footer;
-  // Hero alt metni (slogan)
   if(window.ICERIK.site?.slogan) document.getElementById('heroSub').innerHTML = window.ICERIK.site.slogan + '<br>8–15 yaş arası çocuklar için eğlenceli kodlama platformu.';
+  if(window.loadAboutData) window.loadAboutData(window.ICERIK.hakkimda || {});
   
+  buildMenus(window.ICERIK.menuler);
   kartsGoster(window.ICERIK.menuler, window.ICERIK.bolumler);
 } catch(e) {
   console.error(e);
@@ -830,6 +1179,5 @@ try {
   document.getElementById('cards-grid').innerHTML = '<div class="loading-placeholder">⚠️ Veri yüklenemedi, lütfen daha sonra tekrar dene.</div>';
 }
 </script>
-
 </body>
 </html>

@@ -524,9 +524,9 @@ footer{
 </footer>
 
 <!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="km(event)">
+<div class="modal-overlay" id="modal-overlay">
   <div class="modal">
-    <button class="modal-close" onclick="km(null,true)">✕</button>
+    <button class="modal-close" id="modal-close">✕</button>
     <div id="modal-content"></div>
   </div>
 </div>
@@ -620,7 +620,10 @@ const CC={
 function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML}
 
 window.addEventListener('load', () => {
-  kartsGoster();
+  document.getElementById('modal-overlay').addEventListener('click', e=>{
+    if(e.target===document.getElementById('modal-overlay')) km(null,true);
+  });
+  document.getElementById('modal-close').addEventListener('click', ()=>km(null,true));
   document.addEventListener('keydown', e => { if(e.key==='Escape') km(null,true); });
 });
 
@@ -634,13 +637,13 @@ function ikonHTML(id, c){
 }
 
 function kartsGoster(){
-  const menuler=(ICERIK.menuler||[]).filter(m=>m.aktif!==false).sort((a,b)=>a.sira-b.sira);
-  document.getElementById('cards-grid').innerHTML=menuler.map(m=>{
+  const menuler=(window.ICERIK?.menuler||[]).filter(m=>m.aktif!==false).sort((a,b)=>a.sira-b.sira);
+  const grid=document.getElementById('cards-grid');
+  grid.innerHTML=menuler.map(m=>{
     const c=CC[m.id]||{r:'#7B61FF',bg:'#ede9fe',isim:m.baslik,desc:'Keşfet!',svg:''};
-    return `<div class="kart"
+    return `<div class="kart" data-id="${m.id}"
       onmouseenter="this.style.borderColor='${c.r}44'"
-      onmouseleave="this.style.borderColor='rgba(0,0,0,.05)'"
-      onclick="bolumListesiAc('${m.id}')">
+      onmouseleave="this.style.borderColor='rgba(0,0,0,.05)'">
       <div class="kart-icon" style="background:${c.bg};display:flex;align-items:center;justify-content:center">
         ${ikonHTML(m.id, c)}
       </div>
@@ -651,10 +654,13 @@ function kartsGoster(){
       </button>
     </div>`;
   }).join('');
+  grid.querySelectorAll('.kart').forEach(el=>{
+    el.addEventListener('click',()=>bolumListesiAc(el.dataset.id));
+  });
 }
 
 function bolumListesiAc(id){
-  const liste=(ICERIK.bolumler||{})[id]||[];
+  const liste=(window.ICERIK?.bolumler||{})[id]||[];
   const c=CC[id]||{r:'#7B61FF',isim:id};
   const isim={scratch:'Scratch',arduino:'Arduino',tinkercad:'Tinkercad',algoritma:'Algoritma',yapay_zeka:'Yapay Zeka'}[id]||id;
   if(!liste.length){
@@ -674,7 +680,7 @@ function bolumListesiAc(id){
     <p class="modal-sub" style="margin-bottom:16px">${liste.length} içerik mevcut</p>
     <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
       ${liste.map((item,i)=>`
-        <div onclick="acModal('${id}',ICERIK.bolumler['${id}'][${i}])" style="
+        <div data-bid="${id}" data-idx="${i}" style="
           background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;
           padding:14px 16px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:12px"
           onmouseenter="this.style.background='${c.r}0d';this.style.borderColor='${c.r}44'"
@@ -689,6 +695,14 @@ function bolumListesiAc(id){
     </div>`;
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
+  // Liste item tıklamaları
+  document.querySelectorAll('[data-bid]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const bid=el.dataset.bid;
+      const idx=parseInt(el.dataset.idx);
+      acModal(bid,(window.ICERIK.bolumler||{})[bid][idx]);
+    });
+  });
 }
 
 function bolumAc(id){bolumListesiAc(id)}
@@ -723,13 +737,7 @@ function km(e,f){
     document.body.style.overflow='';
   }
 }
-window.bolumListesiAc=bolumListesiAc;
-window.acModal=acModal;
-window.km=km;
-window.bolumAc=bolumAc;
-window.kartsGoster=kartsGoster;
-window.esc=esc;
-window.ikonHTML=ikonHTML;
+
 </script>
 
 <!-- Firebase veri yükleme -->

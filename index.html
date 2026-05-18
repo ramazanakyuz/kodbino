@@ -69,16 +69,7 @@ body{
   box-shadow:0 4px 14px rgba(123,97,255,0.4),inset 0 1px 0 rgba(255,255,255,0.2);
 }
 
-/* Giriş Yap */
-.btn-giris{
-  background:#7B61FF;color:#fff;border:none;border-radius:30px;
-  padding:9px 18px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;
-  cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;
-  box-shadow:0 3px 14px rgba(123,97,255,0.3);transition:.15s;
-  text-decoration:none;flex-shrink:0;margin-left:4px;
-}
-.btn-giris:hover{background:#6d28d9;transform:translateY(-1px)}
-.btn-giris svg{width:16px;height:16px;flex-shrink:0}
+
 
 /* ══ HERO ══ */
 .hero{
@@ -119,19 +110,7 @@ body{
   background:rgba(255,255,255,.22);
   display:flex;align-items:center;justify-content:center;font-size:.95rem;
 }
-.btn-video{
-  display:inline-flex;align-items:center;gap:12px;
-  background:none;border:none;cursor:pointer;
-  font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;color:#1a1f6e;
-  text-decoration:none;
-}
-.btn-video-ico{
-  width:44px;height:44px;border-radius:50%;background:#fff;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3px 14px rgba(0,0,0,.1);transition:.2s;flex-shrink:0;
-}
-.btn-video-ico svg{width:14px;height:14px;margin-left:3px}
-.btn-video:hover .btn-video-ico{box-shadow:0 4px 18px rgba(0,0,0,.15);transform:scale(1.06)}
+
 
 /* ══ ROBOT VISUAL ══ */
 .hero-right{display:flex;justify-content:center;align-items:center;position:relative}
@@ -290,7 +269,7 @@ footer{
 @media(max-width:600px){
   .cards{grid-template-columns:repeat(2,1fr)}
   .features-inner{grid-template-columns:1fr}
-  .nav,.btn-giris{display:none}
+  .nav{display:none}
   footer{padding:18px 24px}
 }
 </style>
@@ -343,14 +322,7 @@ footer{
       <a href="#about">Hakkımızda</a>
     </nav>
 
-    <!-- Giriş Yap -->
-    <a class="btn-giris" href="#">
-      <svg viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="7" r="3.5" stroke="#fff" stroke-width="1.8"/>
-        <path d="M3 17c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
-      Giriş Yap
-    </a>
+
   </div>
 </div>
 
@@ -367,14 +339,7 @@ footer{
       <a class="btn-kesfet" href="#discover">
         <span class="btn-kesfet-ico">🚀</span>Hemen Keşfet
       </a>
-      <a class="btn-video" href="#">
-        <span class="btn-video-ico">
-          <svg viewBox="0 0 14 14" fill="none">
-            <polygon points="3,1 13,7 3,13" fill="#1a1f6e"/>
-          </svg>
-        </span>
-        Tanıtım Videosu
-      </a>
+
     </div>
   </div>
 
@@ -499,8 +464,7 @@ footer{
   </div>
 </div>
 
-<script src="icerikler.js"></script>
-<script>
+<script type="module">
 const CC={
   scratch:{
     r:'#f97316',bg:'#fff8f0',isim:'Scratch',
@@ -588,26 +552,33 @@ const CC={
 
 function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML}
 
-window.addEventListener('load',()=>{
-  // Önce admin panelinin localStorage verisine bak (en güncel veri)
-  // Yoksa icerikler.js'deki varsayılan veriyi kullan
-  try {
-    const lokal = localStorage.getItem('kodbino_icerik');
-    if(lokal) {
-      const parsed = JSON.parse(lokal);
-      // ICERIK global değişkenini localStorage verisiyle güncelle
-      if(typeof ICERIK !== 'undefined') {
-        Object.assign(ICERIK, parsed);
-      } else {
-        window.ICERIK = parsed;
-      }
-    }
-  } catch(e) { /* localStorage okunamazsa icerikler.js kullan */ }
+// Firebase'den veri yükle
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  if(typeof ICERIK==='undefined'){hataGoster();return;}
+const firebaseConfig = {
+  apiKey: "AIzaSyBWV9SEuGtShSUKQbonekTO8HeGIOJO5w0",
+  authDomain: "kodbino-5fa6f.firebaseapp.com",
+  projectId: "kodbino-5fa6f",
+  storageBucket: "kodbino-5fa6f.firebasestorage.app",
+  messagingSenderId: "912558719816",
+  appId: "1:912558719816:web:7f0d82e40762320816a97d"
+};
+
+const _app = initializeApp(firebaseConfig);
+const _db = getFirestore(_app);
+
+window.addEventListener('load', async () => {
+  try {
+    const snap = await getDoc(doc(_db, 'admin', 'icerik'));
+    window.ICERIK = snap.exists() ? snap.data() : {};
+  } catch(e) {
+    window.ICERIK = {};
+  }
   kartsGoster();
-  if(ICERIK.site?.footer) document.getElementById('footer-text').textContent=ICERIK.site.footer;
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')km(null,true)});
+  const footer = window.ICERIK?.site?.footer;
+  if(footer) document.getElementById('footer-text').textContent = footer;
+  document.addEventListener('keydown', e => { if(e.key==='Escape') km(null,true); });
 });
 
 function ikonHTML(id, c){
@@ -710,32 +681,9 @@ function km(e,f){
   }
 }
 
-function hataGoster(){
-  document.getElementById('cards-grid').innerHTML=`
-    <div style="grid-column:1/-1;text-align:center;padding:48px;background:#fff;border-radius:20px;border:1px solid rgba(0,0,0,.06)">
-      <div style="font-size:1.1rem;font-weight:800;color:#7B61FF;margin-bottom:8px">icerikler.js bulunamadı</div>
-      <p style="font-size:.875rem;color:#6b7280;line-height:1.7;font-weight:600">
-        <code style="background:#f3f4f6;padding:2px 8px;border-radius:4px">admin.html</code>'den giriş yap →
-        <strong>Dışa Aktar</strong> → <code style="background:#f3f4f6;padding:2px 8px;border-radius:4px">icerikler.js</code>'yi bu klasöre koy.
-      </p>
-    </div>`;
-}
+
 </script>
 
-<!-- Netlify Identity token yakalayıcı -->
-<script>
-// Token içeren linkler (şifre sıfırlama, davet, onay) callback.html'e yönlendirilir.
-// Netlify her token linkini ana siteye (/) atar; biz buradan doğru sayfaya geçiyoruz.
-(function() {
-  const hash = window.location.hash;
-  if (hash && (
-    hash.includes('invite_token') ||
-    hash.includes('recovery_token') ||
-    hash.includes('confirmation_token')
-  )) {
-    window.location.replace('/callback.html' + hash);
-  }
-})();
-</script>
+
 </body>
 </html>

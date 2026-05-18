@@ -5,7 +5,99 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Kodbino</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBWV9SEuGtShSUKQbonekTO8HeGIOJO5w0",
+  authDomain: "kodbino-5fa6f.firebaseapp.com",
+  projectId: "kodbino-5fa6f",
+  storageBucket: "kodbino-5fa6f.firebasestorage.app",
+  messagingSenderId: "912558719816",
+  appId: "1:912558719816:web:7f0d82e40762320816a97d"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+const IZINLI_EMAIL = 'ramazanakyuz89@gmail.com'; // ← Sadece bu e-posta girebilir
+
+// Auth durumu değişince
+onAuthStateChanged(auth, async (user) => {
+  if (user && user.email === IZINLI_EMAIL) {
+    // Yetkili kullanıcı — veriyi Firestore'dan yükle
+    await veriYukleFS(user);
+    panelAc(user);
+  } else if (user) {
+    // Yetkisiz kullanıcı
+    await signOut(auth);
+    loginHata('Bu Google hesabının erişim yetkisi yok.');
+  } else {
+    // Giriş yapılmamış
+    loginEkraniGoster();
+  }
+});
+
+// Google ile giriş
+window.girisYap = async function() {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    loginHata('Giriş başarısız: ' + e.message);
+  }
+};
+
+// Çıkış
+window.cikisYap = async function() {
+  await signOut(auth);
+};
+
+// Firestore'dan veri yükle
+async function veriYukleFS(user) {
+  try {
+    const ref = doc(db, 'admin', 'icerik');
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      D = snap.data();
+    } else {
+      D = structuredClone(VARSAYILAN);
+    }
+  } catch(e) {
+    D = structuredClone(VARSAYILAN);
+  }
+}
+
+// Firestore'a veri kaydet
+window.veriKaydet = async function(d) {
+  try {
+    const ref = doc(db, 'admin', 'icerik');
+    await setDoc(ref, d);
+    D = d;
+  } catch(e) {
+    toast('Kaydetme hatası: ' + e.message);
+  }
+};
+
+function panelAc(user) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('panel').style.display = 'flex';
+  document.getElementById('user-email').textContent = user.email;
+  sidebarYenile();
+  ozetYenile();
+}
+function loginEkraniGoster() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('panel').style.display = 'none';
+}
+function loginHata(msg) {
+  document.getElementById('pass-error').textContent = msg;
+  loginEkraniGoster();
+}
+</script>
 <style>
 :root{
   --purple:#7B61FF; --purple-d:#6d28d9; --purple-l:#ede9fe; --purple-ll:#f5f3ff;
@@ -270,9 +362,13 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
       <span><span class="logo-kod">kod</span><span class="lb">b</span><span class="li">i</span><span class="ln">n</span><span class="lo">o</span></span>
     </div>
     <h2>Yönetici Girişi</h2>
-    <p>Devam etmek için Netlify hesabınla giriş yap.</p>
-    <button class="btn-login" onclick="netlifyIdentity.open('login')">🔐 Giriş Yap</button>
-    <div class="login-hint">Şifreni mi unuttun? Giriş ekranında <strong>"Forgot password?"</strong> linkine tıkla.</div>
+    <p>Kodbino admin paneline erişmek için Google hesabınla giriş yap.</p>
+    <div id="pass-error" style="color:#ef4444;font-size:.8rem;font-weight:700;min-height:18px;margin-bottom:8px"></div>
+    <button class="btn-login" onclick="girisYap()">
+      <svg width="18" height="18" viewBox="0 0 48 48" style="vertical-align:middle;margin-right:8px"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Google ile Giriş Yap
+    </button>
+    <div class="login-hint">Sadece yetkili Google hesabı giriş yapabilir.</div>
   </div>
 </div>
 
@@ -291,21 +387,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     </button>
 
     <div class="sidebar-sec">İçerikler</div>
-    <button class="nav-item" onclick="goster('scratch')" id="nav-scratch">
-      <span class="nav-dot" style="background:var(--scratch)"></span>Scratch
-    </button>
-    <button class="nav-item" onclick="goster('tinkercad')" id="nav-tinkercad">
-      <span class="nav-dot" style="background:var(--tinkercad)"></span>Tinkercad
-    </button>
-    <button class="nav-item" onclick="goster('arduino')" id="nav-arduino">
-      <span class="nav-dot" style="background:var(--arduino)"></span>Arduino
-    </button>
-    <button class="nav-item" onclick="goster('algoritma')" id="nav-algoritma">
-      <span class="nav-dot" style="background:var(--algoritma)"></span>Algoritma
-    </button>
-    <button class="nav-item" onclick="goster('yapay_zeka')" id="nav-yapay_zeka">
-      <span class="nav-dot" style="background:var(--yapayzeka)"></span>Yapay Zeka
-    </button>
+    <div id="sidebar-menuler"></div>
 
     <div class="sidebar-sec">Yönetim</div>
     <button class="nav-item" onclick="goster('menuler')" id="nav-menuler">
@@ -334,31 +416,17 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
       <div class="card"><div class="sec-title">Son Eklenenler</div><div class="item-list" id="son-eklenenler"></div></div>
     </div>
 
-    <!-- BÖLÜMLER -->
-    <div class="page" id="page-scratch">
-      <div class="page-header"><h1>🐱 Scratch</h1><p>Scratch bölümündeki içerikleri yönet</p></div>
-      <div class="sec-title">İçerikler<button class="btn-new" onclick="modalAc('scratch')">+ Yeni Ekle</button></div>
-      <div class="item-list" id="list-scratch"></div>
-    </div>
-    <div class="page" id="page-tinkercad">
-      <div class="page-header"><h1>🔧 Tinkercad</h1><p>Tinkercad bölümündeki içerikleri yönet</p></div>
-      <div class="sec-title">İçerikler<button class="btn-new" onclick="modalAc('tinkercad')">+ Yeni Ekle</button></div>
-      <div class="item-list" id="list-tinkercad"></div>
-    </div>
-    <div class="page" id="page-arduino">
-      <div class="page-header"><h1>♾ Arduino</h1><p>Arduino bölümündeki içerikleri yönet</p></div>
-      <div class="sec-title">İçerikler<button class="btn-new" onclick="modalAc('arduino')">+ Yeni Ekle</button></div>
-      <div class="item-list" id="list-arduino"></div>
-    </div>
-    <div class="page" id="page-algoritma">
-      <div class="page-header"><h1>🧩 Algoritma</h1><p>Algoritma bölümündeki içerikleri yönet</p></div>
-      <div class="sec-title">İçerikler<button class="btn-new" onclick="modalAc('algoritma')">+ Yeni Ekle</button></div>
-      <div class="item-list" id="list-algoritma"></div>
-    </div>
-    <div class="page" id="page-yapay_zeka">
-      <div class="page-header"><h1>🤖 Yapay Zeka</h1><p>Yapay Zeka bölümündeki içerikleri yönet</p></div>
-      <div class="sec-title">İçerikler<button class="btn-new" onclick="modalAc('yapay_zeka')">+ Yeni Ekle</button></div>
-      <div class="item-list" id="list-yapay_zeka"></div>
+    <!-- DİNAMİK BÖLÜM SAYFASI — tüm menüler buraya render edilir -->
+    <div class="page" id="page-bolum">
+      <div class="page-header">
+        <h1 id="bolum-baslik">Bölüm</h1>
+        <p id="bolum-aciklama">İçerikleri yönet</p>
+      </div>
+      <div class="sec-title" id="bolum-sec-title">
+        İçerikler
+        <button class="btn-new" id="bolum-yeni-btn">+ Yeni Ekle</button>
+      </div>
+      <div class="item-list" id="list-bolum"></div>
     </div>
 
     <!-- MENÜ YÖNETİMİ -->
@@ -460,36 +528,63 @@ const VARSAYILAN={
   bolumler:{scratch:[],tinkercad:[],arduino:[],algoritma:[],yapay_zeka:[]},
   hakkimda:{isim:'Öğretmen Adı',unvan:'Kodlama Öğretmeni',biyografi_1:'',biyografi_2:'',dersler:[],eposta:'',sinif:'',mesai:''}
 };
-function veriYukle(){try{return JSON.parse(localStorage.getItem(DEPO))||structuredClone(VARSAYILAN)}catch{return structuredClone(VARSAYILAN)}}
-function veriKaydet(d){localStorage.setItem(DEPO,JSON.stringify(d))}
-let D=veriYukle();
+// veriYukle ve veriKaydet Firebase modülünde tanımlı
+let D = structuredClone(VARSAYILAN);
 
-/* NETLIFY IDENTITY */
-netlifyIdentity.on('init',u=>{if(u)panelAc(u)});
-netlifyIdentity.on('login',u=>{netlifyIdentity.close();panelAc(u)});
-netlifyIdentity.on('logout',()=>{document.getElementById('panel').style.display='none';document.getElementById('login-screen').style.display='flex'});
-function panelAc(u){
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('panel').style.display='flex';
-  document.getElementById('user-email').textContent=u.email||'Yönetici';
-  ozetYenile();
-}
-function cikisYap(){netlifyIdentity.logout()}
+/* AUTH — Firebase tarafından yönetiliyor (dosyanın başındaki <script type="module"> bloğu) */
 function sifreSifirla(){
-  const u=netlifyIdentity.currentUser();if(!u)return;
-  fetch('/.netlify/identity/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:u.email})})
-    .then(()=>{document.getElementById('sifre-msg').textContent='E-posta gönderildi ✓'})
-    .catch(()=>{document.getElementById('sifre-msg').textContent='E-posta gönderildi (spam klasörünü kontrol et) ✓'});
+  document.getElementById('sifre-msg').textContent='Google hesabın şifresini Google üzerinden yönetebilirsin.';
+}
+
+/* MENÜ RENKLERİ */
+const MENU_RENK = {
+  scratch:'#f97316',tinkercad:'#f59e0b',arduino:'#0ea5a0',
+  algoritma:'#f97316',yapay_zeka:'#8b5cf6'
+};
+const MENU_EMOJI = {
+  scratch:'🐱',tinkercad:'🔧',arduino:'♾',algoritma:'🧩',yapay_zeka:'🤖'
+};
+function menuRenk(id){ return MENU_RENK[id]||'#7B61FF'; }
+function menuEmoji(id){ return MENU_EMOJI[id]||'📌'; }
+
+/* SİDEBAR DİNAMİK */
+function sidebarYenile(){
+  const menuler=(D.menuler||[]).sort((a,b)=>a.sira-b.sira);
+  document.getElementById('sidebar-menuler').innerHTML = menuler.map(m=>`
+    <button class="nav-item" onclick="bolumGoster('${m.id}')" id="nav-${m.id}">
+      <span class="nav-dot" style="background:${menuRenk(m.id)}"></span>
+      ${menuEmoji(m.id)} ${esc(m.baslik)}
+      ${m.aktif===false?'<span style="font-size:.6rem;color:#ef4444;margin-left:auto">Pasif</span>':''}
+    </button>`).join('');
+}
+
+/* BÖLÜM SAYFASI GÖSTER */
+let _aktifBolum = '';
+function bolumGoster(id){
+  _aktifBolum = id;
+  const m = (D.menuler||[]).find(x=>x.id===id)||{baslik:id};
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-bolum').classList.add('active');
+  const navEl = document.getElementById('nav-'+id);
+  if(navEl) navEl.classList.add('active');
+
+  document.getElementById('bolum-baslik').textContent = menuEmoji(id)+' '+m.baslik;
+  document.getElementById('bolum-aciklama').textContent = m.baslik+' bölümündeki içerikleri yönet';
+  document.getElementById('bolum-yeni-btn').onclick = ()=>modalAc(id);
+  listeYenile(id);
 }
 
 /* NAVİGASYON */
 function goster(s){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+s).classList.add('active');
-  document.getElementById('nav-'+s).classList.add('active');
+  const sayfaId = 'page-'+s;
+  const sayfaEl = document.getElementById(sayfaId);
+  if(sayfaEl) sayfaEl.classList.add('active');
+  const navEl = document.getElementById('nav-'+s);
+  if(navEl) navEl.classList.add('active');
   if(s==='ozet') ozetYenile();
-  else if(['scratch','tinkercad','arduino','algoritma','yapay_zeka'].includes(s)) listeYenile(s);
   else if(s==='menuler') menuYonetimYenile();
   else if(s==='site') siteBilgYukle();
   else if(s==='disaaktar') onizlemeGuncelle();
@@ -498,20 +593,16 @@ function goster(s){
 /* ÖZET */
 function ozetYenile(){
   const b=D.bolumler||{};
-  const stats=[
-    {id:'scratch',label:'Scratch',renk:'#f97316'},{id:'tinkercad',label:'Tinkercad',renk:'#f59e0b'},
-    {id:'arduino',label:'Arduino',renk:'#0ea5a0'},{id:'algoritma',label:'Algoritma',renk:'#f97316'},
-    {id:'yapay_zeka',label:'Yapay Zeka',renk:'#8b5cf6'}
-  ];
-  document.getElementById('stat-grid').innerHTML=stats.map(s=>`
-    <div class="stat-card">
-      <div class="stat-num" style="color:${s.renk}">${(b[s.id]||[]).length}</div>
-      <div class="stat-label">${s.label}</div>
+  const menuler=(D.menuler||[]).sort((a,b)=>a.sira-b.sira);
+  document.getElementById('stat-grid').innerHTML=menuler.map(m=>`
+    <div class="stat-card" onclick="bolumGoster('${m.id}')" style="cursor:pointer">
+      <div class="stat-num" style="color:${menuRenk(m.id)}">${(b[m.id]||[]).length}</div>
+      <div class="stat-label">${menuEmoji(m.id)} ${esc(m.baslik)}</div>
     </div>`).join('');
   const tumIcerik=Object.entries(b).flatMap(([k,v])=>v.map(i=>({...i,bolum:k}))).slice(-6).reverse();
   document.getElementById('son-eklenenler').innerHTML=tumIcerik.length
     ?tumIcerik.map(i=>`<div class="item-row">
-      <span class="item-badge" style="background:var(--purple-ll);color:var(--purple)">${i.bolum}</span>
+      <span class="item-badge" style="background:${menuRenk(i.bolum)}22;color:${menuRenk(i.bolum)}">${menuEmoji(i.bolum)} ${esc(i.bolum)}</span>
       <div style="flex:1"><div class="item-title">${esc(i.baslik)}</div></div></div>`).join('')
     :'<div class="empty">Henüz içerik eklenmedi.</div>';
 }
@@ -519,15 +610,15 @@ function ozetYenile(){
 /* LİSTE */
 function listeYenile(bolum){
   const liste=(D.bolumler||{})[bolum]||[];
-  document.getElementById('list-'+bolum).innerHTML=liste.length
+  document.getElementById('list-bolum').innerHTML=liste.length
     ?liste.map((item,i)=>`<div class="item-row">
-      <span class="item-badge" style="background:var(--purple-ll);color:var(--purple)">${item.emoji||'📌'}</span>
+      <span class="item-badge" style="background:${menuRenk(bolum)}22;color:${menuRenk(bolum)}">${item.emoji||menuEmoji(bolum)}</span>
       <div style="flex:1"><div class="item-title">${esc(item.baslik)}</div><span class="item-sub">${esc(item.kisa_aciklama)}</span></div>
       <div class="item-actions">
         <button class="btn-icon" onclick="modalAc('${bolum}',${i})">Düzenle</button>
         <button class="btn-icon del" onclick="sil('${bolum}',${i})">Sil</button>
       </div></div>`).join('')
-    :`<div class="empty">Henüz içerik eklenmedi.</div>`;
+    :`<div class="empty">Henüz içerik eklenmedi. <button class="btn-new" style="margin-left:8px" onclick="modalAc('${bolum}')">+ Ekle</button></div>`;
 }
 
 /* MODAL */
@@ -613,7 +704,7 @@ function yeniMenuModal(){
   D.bolumler[temizId]=[];
   menuYonetimYenile();toast(`"${baslik}" menüsü eklendi!`);
 }
-function menuKaydet(){veriKaydet(D);toast('Menü değişiklikleri kaydedildi ✓')}
+function menuKaydet(){veriKaydet(D);sidebarYenile();ozetYenile();toast('Menü değişiklikleri kaydedildi ✓')}
 
 /* SİTE BİLGİLERİ */
 function siteBilgYukle(){

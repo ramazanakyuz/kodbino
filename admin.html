@@ -186,7 +186,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 /* Modal */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,31,110,.6);z-index:100;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px)}
 .modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:20px;width:100%;max-width:760px;padding:28px;max-height:92vh;overflow-y:auto;animation:fadeUp .25s ease}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:700px;padding:28px;max-height:92vh;overflow-y:auto;animation:fadeUp .25s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .modal-header h2{font-size:1.05rem;font-weight:900;color:var(--navy)}
@@ -528,129 +528,57 @@ function listeYenile(bolum){
     :`<div class="empty">Henüz içerik eklenmedi. <button class="btn-new" style="margin-left:8px" onclick="modalAc('${bolum}')">+ Ekle</button></div>`;
 }
 
-/* MODAL - Scratch için özel form, diğer menüler için eski form */
+/* MODAL (zengin içerik alanları) */
 let _tip='',_idx=-1;
-function modalAc(tip, idx = -1) {
-    _tip = tip;
-    _idx = idx;
-    const item = idx === -1 ? null : (D.bolumler[tip] || [])[idx];
-    document.getElementById('modal-baslik').textContent = idx === -1 ? 'Yeni İçerik' : 'Düzenle';
-
-    if (tip === 'scratch') {
-        const kazanimlar = item?.kazanimlar ? item.kazanimlar.join('\n') : '';
-        const adimlar = item?.adimlar ? item.adimlar.join('\n') : '';
-        const bloklar = item?.bloklar ? item.bloklar.join('\n') : '';
-        const quiz = item?.mini_quiz || '';
-        document.getElementById('modal-form').innerHTML = `
-            <div class="form-grid">
-                <div class="form-field form-full"><label>📘 Ders Başlığı</label><input type="text" id="f-baslik" value="${esc(item?.baslik || '')}" placeholder="Örn: Scratch ile Kedi Zıplatma"></div>
-                <div class="form-field form-full"><label>📝 Kısa Açıklama</label><input type="text" id="f-kisa" value="${esc(item?.kisa_aciklama || '')}" placeholder="Öğrenciye bu derste ne yapacağını anlatan kısa cümle"></div>
-                <div class="form-field form-full"><label>🎯 Kazanımlar (Her satıra bir kazanım yazın)</label><textarea id="f-kazanimlar" rows="4">${esc(kazanimlar)}</textarea><div class="form-hint">Örn: Blokları tanır, Yeşil bayrak kullanır, Koşul yapısını öğrenir.</div></div>
-                <div class="form-field form-full"><label>📖 Konu Anlatımı (HTML destekli)</label><textarea id="f-anlatim" rows="8">${esc(item?.konu_anlatimi || '')}</textarea><div class="form-hint">Detaylı açıklama, resimler veya kod parçacıkları ekleyebilirsiniz.</div></div>
-                <div class="form-field form-full"><label>🧩 Adım Adım Yapım (Her satıra bir adım yazın)</label><textarea id="f-adimlar" rows="5">${esc(adimlar)}</textarea><div class="form-hint">Örn: 1. Scratch editörünü aç, 2. Kuklayı seç, ...</div></div>
-                <div class="form-field form-full"><label>🧱 Kullanılan Bloklar (Her satıra bir blok adı yazın)</label><textarea id="f-bloklar" rows="4">${esc(bloklar)}</textarea><div class="form-hint">Örn: Yeşil bayrak, 10 adım git, Sürekli, Eğer ise...</div></div>
-                <div class="form-field"><label>🎥 Video (YouTube embed linki)</label><input type="url" id="f-video" value="${esc(item?.video_embed || '')}" placeholder="https://www.youtube.com/embed/..."></div>
-                <div class="form-field"><label>🔗 Scratch Proje Linki</label><input type="url" id="f-scratch_link" value="${esc(item?.scratch_link || '')}" placeholder="https://scratch.mit.edu/projects/..."></div>
-                <div class="form-field form-full"><label>🚀 Görev / Challenge</label><textarea id="f-gorev" rows="4">${esc(item?.gorev || '')}</textarea><div class="form-hint">Öğrencilerin yapmasını istediğin ek zorluk seviyesi görev.</div></div>
-                <div class="form-field form-full"><label>📝 Mini Quiz (Soru ve cevaplar, her satırda soru?Cevap)</label><textarea id="f-quiz" rows="5">${esc(quiz)}</textarea><div class="form-hint">Örn: Scratch'ta karakterlere ne ad verilir?Kukla</div></div>
-                <div class="form-field form-full"><label>SIRA NO (Küçük sayı önce gelir)</label><input type="number" id="f-sira" value="${item?.sira || ''}"></div>
-                <div class="form-field form-full"><label>DERS GÖRSELİ (URL)</label><input type="url" id="f-resim" value="${esc(item?.resim || '')}" placeholder="https://..."></div>
-            </div>
-            <div class="form-actions"><button class="btn-save" onclick="kaydet()">Kaydet</button><button class="btn-cancel" onclick="modalKapat(null,true)">İptal</button></div>
-        `;
-    } else {
-        // Diğer menüler için eski form
-        const adimlar = item?.adimlar || [];
-        const linkler = tip === 'tinkercad' ? `<div class="form-field"><label>TİNKERCAD LİNKİ</label><input type="url" id="f-tinkercad_link" value="${esc(item?.tinkercad_link || '')}"></div>`
-            : tip === 'arduino' ? `<div class="form-field"><label>WOKWİ LİNKİ</label><input type="url" id="f-wokwi_link" value="${esc(item?.wokwi_link || '')}"></div>`
-            : '';
-        document.getElementById('modal-form').innerHTML = `
-            <div class="form-grid">
-                <div class="form-field"><label>EMOJİ</label><input type="text" id="f-emoji" value="${esc(item?.emoji || '')}" placeholder="🐱" style="max-width:90px"></div>
-                <div class="form-field form-full"><label>BAŞLIK</label><input type="text" id="f-baslik" value="${esc(item?.baslik || '')}"></div>
-                <div class="form-field form-full"><label>KISA AÇIKLAMA</label><input type="text" id="f-kisa" value="${esc(item?.kisa_aciklama || '')}"></div>
-                <div class="form-field form-full"><label>KONU ANLATIMI (HTML destekli)</label><textarea id="f-anlatim" rows="6">${esc(item?.konu_anlatimi || '')}</textarea></div>
-                <div class="form-field form-full"><label>ADIMLAR</label>
-                    <div class="steps-list" id="steps-list">${adimlar.map((a, i) => adimSatiri(a, i)).join('')}</div>
-                    <button class="btn-add-step" onclick="adimEkle()">+ Adım Ekle</button>
-                </div>
-                ${linkler}
-                <div class="form-field"><label>PDF DOSYASI</label><input type="text" id="f-pdf" value="${esc(item?.pdf_link || '')}"></div>
-                <div class="form-field form-full"><label>VİDEO EMBED LİNKİ</label><input type="url" id="f-video" value="${esc(item?.video_embed || '')}"></div>
-                <div class="form-field form-full"><label>DERS GÖRSELİ (URL)</label><input type="url" id="f-resim" value="${esc(item?.resim || '')}"></div>
-                <div class="form-field form-full"><label>SIRA NO</label><input type="number" id="f-sira" value="${item?.sira || ''}"></div>
-                <div class="form-field form-full"><label>HTML İÇERİK (Oyun)</label><textarea id="f-html_icerik" rows="6">${esc(item?.html_icerik || '')}</textarea></div>
-                <div class="form-field form-full"><label>OYUN LİNKİ</label><input type="url" id="f-oyun_link" value="${esc(item?.oyun_link || '')}"></div>
-            </div>
-            <div class="form-actions"><button class="btn-save" onclick="kaydet()">Kaydet</button><button class="btn-cancel" onclick="modalKapat(null,true)">İptal</button></div>
-        `;
-    }
-    document.getElementById('modal-overlay').classList.add('open');
+function modalAc(tip,idx=-1){
+  _tip=tip;_idx=idx;
+  const item=idx===-1?null:(D.bolumler[tip]||[])[idx];
+  document.getElementById('modal-baslik').textContent=idx===-1?'Yeni İçerik':'Düzenle';
+  const adimlar=item?.adimlar||[];
+  const linkler=tip==='scratch'?`<div class="form-field"><label>SCRATCH LİNKİ</label><input type="url" id="f-scratch_link" value="${esc(item?.scratch_link||'')}"></div>`
+    :tip==='tinkercad'?`<div class="form-field"><label>TİNKERCAD LİNKİ</label><input type="url" id="f-tinkercad_link" value="${esc(item?.tinkercad_link||'')}"></div>`
+    :tip==='arduino'?`<div class="form-field"><label>WOKWİ LİNKİ</label><input type="url" id="f-wokwi_link" value="${esc(item?.wokwi_link||'')}"></div>`
+    :'';
+  document.getElementById('modal-form').innerHTML=`<div class="form-grid">
+    <div class="form-field"><label>EMOJİ</label><input type="text" id="f-emoji" value="${esc(item?.emoji||'')}" placeholder="🐱" style="max-width:90px"></div>
+    <div class="form-field form-full"><label>BAŞLIK</label><input type="text" id="f-baslik" value="${esc(item?.baslik||'')}"></div>
+    <div class="form-field form-full"><label>KISA AÇIKLAMA</label><input type="text" id="f-kisa" value="${esc(item?.kisa_aciklama||'')}"></div>
+    <div class="form-field form-full"><label>KONU ANLATIMI (HTML destekli)</label><textarea id="f-anlatim" rows="6">${esc(item?.konu_anlatimi||'')}</textarea></div>
+    <div class="form-field form-full"><label>ADIMLAR</label>
+      <div class="steps-list" id="steps-list">${adimlar.map((a,i)=>adimSatiri(a,i)).join('')}</div>
+      <button class="btn-add-step" onclick="adimEkle()">+ Adım Ekle</button>
+    </div>
+    ${linkler}
+    <div class="form-field"><label>PDF DOSYASI</label><input type="text" id="f-pdf" value="${esc(item?.pdf_link||'')}"></div>
+    <div class="form-field form-full"><label>VİDEO EMBED LİNKİ <span class="form-hint">youtube.com/embed/...</span></label><input type="url" id="f-video" value="${esc(item?.video_embed||'')}"></div>
+    <div class="form-field form-full"><label>DERS GÖRSELİ (URL)</label><input type="url" id="f-resim" value="${esc(item?.resim||'')}" placeholder="https://..."></div>
+    <div class="form-field form-full"><label>SIRA NO (Küçük sayı önce gelir)</label><input type="number" id="f-sira" value="${item?.sira||''}"></div>
+    <div class="form-field form-full"><label>HTML İÇERİK (Oyun veya ek materyal)</label><textarea id="f-html_icerik" rows="8">${esc(item?.html_icerik||'')}</textarea><div class="form-hint">Buraya kendi HTML kodunuzu (örneğin basit bir oyun) yapıştırabilirsiniz.</div></div>
+    <div class="form-field form-full"><label>OYUN LİNKİ (Scratch, Tinkercad vb.)</label><input type="url" id="f-oyun_link" value="${esc(item?.oyun_link||'')}"></div>
+  </div>
+  <div class="form-actions"><button class="btn-save" onclick="kaydet()">Kaydet</button><button class="btn-cancel" onclick="modalKapat(null,true)">İptal</button></div>`;
+  document.getElementById('modal-overlay').classList.add('open');
 }
-
-// Adım ekleme (Scratch dışı menüler için)
 function adimSatiri(v='',i=0){return `<div class="step-row" id="step-${i}"><input type="text" value="${esc(v)}" placeholder="Adım ${i+1}"><button class="btn-remove-step" onclick="adimSil(${i})">✕</button></div>`}
 function adimEkle(){const l=document.getElementById('steps-list');const i=l.children.length;l.insertAdjacentHTML('beforeend',adimSatiri('',i))}
 function adimSil(i){const el=document.getElementById('step-'+i);if(el)el.remove();document.querySelectorAll('#steps-list .step-row').forEach((r,j)=>{r.id='step-'+j;r.querySelector('button').setAttribute('onclick',`adimSil(${j})`)});}
 function adimlarTopla(){return[...document.querySelectorAll('#steps-list .step-row input')].map(i=>i.value.trim()).filter(Boolean)}
-
-function kaydet() {
-    if (!D.bolumler) D.bolumler = {};
-    if (!D.bolumler[_tip]) D.bolumler[_tip] = [];
-
-    let item;
-    if (_tip === 'scratch') {
-        const kazanimlar = document.getElementById('f-kazanimlar')?.value.split('\n').filter(s => s.trim()) || [];
-        const adimlar = document.getElementById('f-adimlar')?.value.split('\n').filter(s => s.trim()) || [];
-        const bloklar = document.getElementById('f-bloklar')?.value.split('\n').filter(s => s.trim()) || [];
-        const mini_quiz = document.getElementById('f-quiz')?.value || '';
-        const gorev = document.getElementById('f-gorev')?.value || '';
-
-        item = {
-            id: (_idx === -1 ? _tip[0] + Date.now() : (D.bolumler[_tip][_idx]?.id || _tip[0] + Date.now())),
-            baslik: g('f-baslik'),
-            kisa_aciklama: g('f-kisa'),
-            konu_anlatimi: g('f-anlatim'),
-            kazanimlar: kazanimlar,
-            adimlar: adimlar,
-            bloklar: bloklar,
-            video_embed: g('f-video'),
-            scratch_link: g('f-scratch_link'),
-            gorev: gorev,
-            mini_quiz: mini_quiz,
-            sira: parseInt(g('f-sira')) || 0,
-            resim: g('f-resim')
-        };
-    } else {
-        const adimlar = adimlarTopla();
-        item = {
-            id: (_idx === -1 ? _tip[0] + Date.now() : (D.bolumler[_tip][_idx]?.id || _tip[0] + Date.now())),
-            emoji: g('f-emoji'),
-            baslik: g('f-baslik'),
-            kisa_aciklama: g('f-kisa'),
-            konu_anlatimi: g('f-anlatim'),
-            adimlar: adimlar,
-            pdf_link: g('f-pdf'),
-            video_embed: g('f-video'),
-            resim: g('f-resim'),
-            sira: parseInt(g('f-sira')) || 0,
-            html_icerik: g('f-html_icerik'),
-            oyun_link: g('f-oyun_link')
-        };
-        if (_tip === 'tinkercad') item.tinkercad_link = g('f-tinkercad_link');
-        if (_tip === 'arduino') item.wokwi_link = g('f-wokwi_link');
-    }
-
-    if (_idx === -1) D.bolumler[_tip].push(item);
-    else D.bolumler[_tip][_idx] = item;
-
-    veriKaydet(D);
-    modalKapat(null, true);
-    listeYenile(_tip);
-    ozetYenile();
-    toast('Kaydedildi ✓');
+function kaydet(){
+  if(!D.bolumler)D.bolumler={};if(!D.bolumler[_tip])D.bolumler[_tip]=[];
+  const item={
+    id:(_idx===-1?_tip[0]+Date.now():(D.bolumler[_tip][_idx]?.id||_tip[0]+Date.now())),
+    emoji:g('f-emoji'),baslik:g('f-baslik'),kisa_aciklama:g('f-kisa'),
+    konu_anlatimi:g('f-anlatim'),adimlar:adimlarTopla(),
+    pdf_link:g('f-pdf'),video_embed:g('f-video'),
+    resim:g('f-resim'),sira:parseInt(g('f-sira'))||0,
+    html_icerik:g('f-html_icerik'),oyun_link:g('f-oyun_link')
+  };
+  if(_tip==='scratch') item.scratch_link=g('f-scratch_link');
+  if(_tip==='tinkercad') item.tinkercad_link=g('f-tinkercad_link');
+  if(_tip==='arduino') item.wokwi_link=g('f-wokwi_link');
+  if(_idx===-1) D.bolumler[_tip].push(item); else D.bolumler[_tip][_idx]=item;
+  veriKaydet(D); modalKapat(null,true); listeYenile(_tip); ozetYenile(); toast('Kaydedildi ✓');
 }
-
 function sil(bolum,idx){
   if(!confirm('Silmek istediğine emin misin?'))return;
   D.bolumler[bolum].splice(idx,1); veriKaydet(D); listeYenile(bolum); ozetYenile(); toast('Silindi.');

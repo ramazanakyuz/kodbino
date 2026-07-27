@@ -2,304 +2,244 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Kodbino — Hayal Et, Kodla, Geliştir!</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kodbino — Kodlamayı Keşfet!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Nunito',sans-serif;
-  background:#f8faff;
-  min-height:100vh;
-  overflow-x:hidden;
-  color:#1a1f6e;
+/* ══ GENEL AYARLAR ══ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #f0f4ff;
+  color: #1a1f6e;
+  overflow-x: hidden;
 }
-
-/* ══ HEADER ══ */
-.header-outer{
-  padding:12px 24px;
-  display:flex;
-  justify-content:center;
-  position:sticky;
-  top:0;
-  z-index:100;
-  background:rgba(255,255,255,0.92);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(0,0,0,.06);
-}
-.header-pill{
-  background:#fff;
-  border-radius:50px;
-  padding:8px 16px 8px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  box-shadow:0 4px 24px rgba(100,80,200,0.13);
-  width:100%;
-  max-width:1200px;
-}
-.logo{ display:flex; align-items:center; gap:12px; text-decoration:none; }
-.logo-wordmark{ font-size:2.2rem; font-weight:900; letter-spacing:-0.5px; }
-.lk{color:#0B1F78} .lb{color:#4C8DFF} .li{color:#74C043} .ln{color:#F6C431} .lo{color:#FF8A1F}
 
 /* ══ HERO SECTION ══ */
-.hero{
-  max-width:1200px;
-  margin:0 auto;
-  padding:60px 40px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  align-items:center;
-  gap:40px;
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 40px;
+  align-items: center;
+  min-height: 100vh;
 }
-.hero-h1{ font-size:clamp(2.5rem,5vw,4rem); font-weight:900; line-height:1.1; margin-bottom:16px; }
-.h-purple{color:#7B61FF;}
-.h-green{color:#22c55e;}
-.hero-sub{ font-size:1.1rem; font-weight:600; color:#6b7280; margin-bottom:30px; max-width:450px; }
 
-/* ══ SÜPER ANİMASYON SAHNESİ ══ */
-.animation-stage {
+.hero-text h1 {
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+.hero-text span { display: block; }
+.text-purple { color: #7B61FF; }
+.text-green { color: #22c55e; }
+.hero-sub { font-size: 1.2rem; color: #6b7280; margin-bottom: 30px; }
+
+/* ══ ANİMASYON SAHNESİ ══ */
+.stage {
   position: relative;
   width: 100%;
-  height: 480px;
+  height: 500px;
   background: white;
   border-radius: 40px;
-  box-shadow: 0 30px 60px rgba(123,97,255,0.1);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.1);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: 40px;
-  border: 1px solid rgba(123,97,255,0.1);
+  border: 4px solid #fff;
 }
 
-/* Kodbino Robot */
-.robot-actor {
-  width: 100px;
-  height: 100px;
+/* 🤖 KLASİK ROBOT TASARIMI 🤖 */
+.classic-robot {
+  position: absolute;
+  bottom: 50px;
+  left: -150px; /* Dışarıdan başlar */
+  width: 120px;
   z-index: 10;
-  transform: translateY(-200px); /* Başlangıçta ekran dışında */
-  animation: robotEnter 10s infinite ease-in-out;
-}
-
-/* Kod Blokları */
-.blocks-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
-  position: relative;
+  animation: robotWorkflow 12s infinite ease-in-out;
 }
 
-.s-block {
-  width: 180px;
-  padding: 12px 18px;
-  color: white;
-  font-weight: 800;
-  font-size: 1rem;
-  margin-bottom: 2px;
-  position: relative;
-  opacity: 0;
+/* Robot Parçaları */
+.r-head { width: 60px; height: 50px; background: #d1d5db; border: 3px solid #9ca3af; border-radius: 10px; position: relative; }
+.r-eye { width: 12px; height: 12px; background: #1a1f3c; border-radius: 50%; position: absolute; top: 15px; animation: eyeGlow 12s infinite; }
+.eye-l { left: 10px; } .eye-r { right: 10px; }
+.r-antenna { width: 4px; height: 15px; background: #9ca3af; position: absolute; top: -15px; left: 28px; }
+.r-antenna::after { content: ''; width: 10px; height: 10px; background: #ef4444; border-radius: 50%; position: absolute; top: -8px; left: -3px; }
+
+.r-body { width: 80px; height: 70px; background: #e5e7eb; border: 3px solid #9ca3af; border-radius: 8px; margin-top: 5px; position: relative; display: flex; justify-content: center; align-items: center; }
+.r-panel { width: 40px; height: 20px; background: #1a1f3c; border-radius: 4px; }
+
+.r-arm { width: 12px; height: 40px; background: #9ca3af; position: absolute; top: 10px; border-radius: 6px; transform-origin: top center; }
+.arm-l { left: -15px; animation: armMoveL 12s infinite; }
+.arm-r { right: -15px; animation: armMoveR 12s infinite; }
+
+.r-base { width: 90px; height: 20px; background: #4b5563; border-radius: 10px; margin-top: 5px; }
+
+/* 🧩 SCRATCH BLOKLARI 🧩 */
+.blocks-container {
+  position: absolute;
+  left: 50%;
+  top: 150px;
+  transform: translateX(-50%);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  /* Scratch Notch Effect */
+}
+
+.block {
+  width: 160px;
+  padding: 12px;
+  color: white;
+  font-weight: 900;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+  opacity: 0;
+  text-align: center;
   clip-path: polygon(0% 0%, 15px 0%, 20px 6px, 40px 6px, 45px 0%, 100% 0%, 100% 100%, 45px 100%, 40px 106%, 20px 106%, 15px 100%, 0% 100%);
 }
 
-.b-hayal { background: #FFAB19; animation: blockWait 10s infinite 1.5s; }
-.b-kodla { background: #4C97FF; animation: blockWait 10s infinite 2.5s; }
-.b-gelistir { background: #0FBD8C; animation: blockWait 10s infinite 3.5s; }
+.b1 { background: #FFAB19; animation: blockAppear 12s infinite 3s; }
+.b2 { background: #4C97FF; animation: blockAppear 12s infinite 4s; }
+.b3 { background: #0FBD8C; animation: blockAppear 12s infinite 5s; }
 
-/* Sonuç Ekranı (Rocket & Text) */
-.result-overlay {
+/* 🚀 BÜYÜK FİNAL: ROKET 🚀 */
+.final-rocket {
   position: absolute;
-  inset: 0;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  bottom: -300px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8rem;
   z-index: 20;
-  opacity: 0;
-  transform: scale(0.8);
-  pointer-events: none;
-  animation: showResult 10s infinite;
+  animation: rocketLaunch 12s infinite;
 }
 
-.rocket {
-  font-size: 5rem;
-  animation: rocketLaunch 2s infinite ease-in-out;
-}
-
-.result-text {
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: #7B61FF;
-  margin-top: 20px;
+.success-msg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
-  line-height: 1.2;
+  opacity: 0;
+  z-index: 30;
+  animation: showText 12s infinite;
 }
+.success-msg h2 { font-size: 2.5rem; color: #7B61FF; text-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-/* ══ KEYFRAMES ══ */
+/* ══ ANİMASYON KEYFRAMES ══ */
 
-/* Robot sahneye girer ve bekler */
-@keyframes robotEnter {
-  0% { transform: translateY(-200px); }
-  10% { transform: translateY(0); }
-  45% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-20px) scale(1.1); } /* "Snap" anı zıplaması */
-  55% { transform: translateY(0); opacity: 1; }
-  60% { opacity: 0; } /* Sonuç ekranında kaybolur */
+/* Robotun İş Akışı */
+@keyframes robotWorkflow {
+  0% { left: -150px; bottom: 50px; opacity: 1; } /* Giriş */
+  15%, 25% { left: 50%; transform: translateX(-50%); bottom: 50px; } /* Ortada durur */
+  30%, 60% { bottom: 50px; } /* Blokları inşa eder */
+  70% { bottom: 70px; transform: translateX(-50%) scale(1.1); } /* Birleştirme zıplaması */
+  80% { bottom: 100px; opacity: 0; } /* Rokete biniş/kayboluş */
   100% { opacity: 0; }
 }
 
-/* Blokların sırayla belirmesi */
-@keyframes blockWait {
-  0%, 10% { opacity: 0; transform: translateY(-20px); }
-  20%, 55% { opacity: 1; transform: translateY(0); }
-  60%, 100% { opacity: 0; transform: translateY(50px); }
+/* Blokların Sırayla Gelmesi */
+@keyframes blockAppear {
+  0%, 20% { opacity: 0; transform: translateY(-30px); }
+  30%, 65% { opacity: 1; transform: translateY(0); }
+  75%, 100% { opacity: 0; transform: scale(0); }
 }
 
-/* Sonuç ekranının patlaması */
-@keyframes showResult {
-  0%, 58% { opacity: 0; transform: scale(0.8); }
-  62%, 92% { opacity: 1; transform: scale(1); }
-  95%, 100% { opacity: 0; }
-}
-
-/* Roket titreme ve fırlama */
+/* Roket Fırlatma */
 @keyframes rocketLaunch {
-  0%, 100% { transform: translateY(0) rotate(0); }
-  25% { transform: translateY(-10px) rotate(-5deg); }
-  75% { transform: translateY(-20px) rotate(5deg); }
+  0%, 75% { bottom: -300px; opacity: 0; }
+  80% { bottom: 50px; opacity: 1; }
+  90% { bottom: 600px; opacity: 1; }
+  100% { bottom: 800px; opacity: 0; }
 }
 
-/* Işıltı Efekti */
-.glow {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background: radial-gradient(circle, #7B61FF 0%, transparent 70%);
-  filter: blur(20px);
-  opacity: 0;
-  animation: snapGlow 10s infinite;
+/* Yazı Görünümü */
+@keyframes showText {
+  0%, 85% { opacity: 0; transform: translate(-50%, -40%); }
+  90%, 98% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; }
 }
 
-@keyframes snapGlow {
-  0%, 48% { opacity: 0; transform: scale(0); }
-  50% { opacity: 0.8; transform: scale(4); }
-  55% { opacity: 0; transform: scale(0); }
+/* Kolların Hareketi */
+@keyframes armMoveL {
+  0%, 25% { transform: rotate(0); }
+  30%, 60% { transform: rotate(110deg); }
+}
+@keyframes armMoveR {
+  0%, 25% { transform: rotate(0); }
+  30%, 60% { transform: rotate(-110deg); }
+}
+
+/* Göz Parlaması */
+@keyframes eyeGlow {
+  0%, 65% { background: #1a1f3c; box-shadow: none; }
+  70%, 80% { background: #22c55e; box-shadow: 0 0 15px #22c55e; }
 }
 
 /* Responsive */
-@media(max-width:900px){
-  .hero{ grid-template-columns: 1fr; text-align: center; }
-  .hero-sub{ margin: 20px auto; }
+@media(max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding: 40px 20px; text-align: center; }
+  .hero-text h1 { font-size: 3rem; }
+  .stage { height: 400px; }
 }
-
-/* ══ DİĞER BÖLÜMLER ══ */
-.discover { padding: 60px 20px; max-width: 1100px; margin: 0 auto; text-align: center; }
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 40px; }
-.kart { background: white; padding: 30px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s; cursor: pointer; }
-.kart:hover { transform: translateY(-10px); }
-.kart-icon { font-size: 3rem; margin-bottom: 15px; }
-footer { padding: 40px; text-align: center; color: #9ca3af; font-weight: 700; border-top: 1px solid #eee; }
 </style>
 </head>
 <body>
 
-<div class="header-outer">
-  <div class="header-pill">
-    <a class="logo" href="#">
-      <div class="logo-wordmark">
-        <span class="lk">kod</span><span class="lb">b</span><span class="li">i</span><span class="ln">n</span><span class="lo">o</span>
-      </div>
-    </a>
-    <nav style="display: flex; gap: 20px; font-weight: 800;">
-      <a href="#" style="text-decoration: none; color: #1a1f6e;">Ana Sayfa</a>
-      <a href="#discover" style="text-decoration: none; color: #1a1f6e;">Dersler</a>
-    </nav>
-  </div>
-</div>
-
 <section class="hero">
-  <div class="hero-left">
-    <h1 class="hero-h1">
-      <span class="h-dark">Hayal Et,</span><br>
-      <span class="h-purple">Kodla,</span><br>
-      <span class="h-green">Geliştir!</span>
+  <!-- Sol Taraf: Metinler -->
+  <div class="hero-text">
+    <h1>
+      <span>Hayal Et,</span>
+      <span class="text-purple">Kodla,</span>
+      <span class="text-green">Geliştir!</span>
     </h1>
-    <p class="hero-sub">Kodlama dünyasına Kodbino ile adım at. Kendi oyunlarını, robotlarını ve yapay zekanı tasarlamaya hazır mısın?</p>
-    <a href="#discover" style="display:inline-block; background:#7B61FF; color:white; padding:15px 35px; border-radius:50px; text-decoration:none; font-weight:800; box-shadow:0 10px 20px rgba(123,97,255,0.3);">🚀 Hemen Başla</a>
+    <p class="hero-sub">Geleceğin teknolojisini bugünden öğrenmeye başla. Kodbino ile eğlenceli dersler seni bekliyor!</p>
+    <div style="display:flex; gap:15px; justify-content: inherit;">
+        <button style="padding: 15px 30px; border-radius: 50px; border:none; background:#7B61FF; color:white; font-weight:bold; cursor:pointer; box-shadow: 0 10px 20px rgba(123,97,255,0.3);">🚀 Derse Başla</button>
+    </div>
   </div>
 
+  <!-- Sağ Taraf: Animasyon Sahnesi -->
   <div class="hero-right">
-    <div class="animation-stage">
-      <!-- Glow Effect -->
-      <div class="glow"></div>
-
-      <!-- Kodbino Robot -->
-      <div class="robot-actor">
-        <svg viewBox="0 0 44 44">
-          <ellipse cx="22" cy="4" rx="4.5" ry="6" fill="#74C043"/>
-          <rect x="7" y="11" width="30" height="22" rx="9" fill="#f8f8f8" stroke="#e8e8e8"/>
-          <rect x="10" y="14" width="24" height="16" rx="6" fill="#1a1f3c"/>
-          <rect x="13" y="17" width="7" height="6" rx="2.5" fill="#4C8DFF"/>
-          <rect x="24" y="17" width="7" height="6" rx="2.5" fill="#4C8DFF"/>
-          <circle cx="15" cy="18.5" r="1.5" fill="#fff" opacity=".85"/>
-          <circle cx="26" cy="18.5" r="1.5" fill="#fff" opacity=".85"/>
-          <path d="M16 26 Q22 30 28 26" stroke="#4C8DFF" stroke-width="1.8" fill="none"/>
-        </svg>
+    <div class="stage">
+      
+      <!-- Klasik Robot -->
+      <div class="classic-robot">
+        <div class="r-head">
+          <div class="r-antenna"></div>
+          <div class="r-eye eye-l"></div>
+          <div class="r-eye eye-r"></div>
+        </div>
+        <div class="r-body">
+          <div class="r-arm arm-l"></div>
+          <div class="r-arm arm-r"></div>
+          <div class="r-panel"></div>
+        </div>
+        <div class="r-base"></div>
       </div>
 
-      <!-- Code Blocks Stack -->
-      <div class="blocks-stack">
-        <div class="s-block b-hayal"><span>✨</span> Hayal Et</div>
-        <div class="s-block b-kodla"><span>💻</span> Kodla</div>
-        <div class="s-block b-gelistir"><span>🛠️</span> Geliştir</div>
+      <!-- Kod Blokları -->
+      <div class="blocks-container">
+        <div class="block b1">✨ Hayal Et</div>
+        <div class="block b2">💻 Kodla</div>
+        <div class="block b3">🛠️ Geliştir</div>
       </div>
 
-      <!-- Result Overlay -->
-      <div class="result-overlay">
-        <div class="rocket">🚀</div>
-        <div class="result-text">MÜKEMMEL!<br>GELECEĞİ İNŞA ET!</div>
+      <!-- Roket Finali -->
+      <div class="final-rocket">🚀</div>
+
+      <!-- Başarı Mesajı -->
+      <div class="success-msg">
+        <h2>HARİKA İŞ!</h2>
+        <p style="font-weight: 800; color: #6b7280;">Kendi Geleceğini Kodladın!</p>
       </div>
+
     </div>
   </div>
 </section>
-
-<section class="discover" id="discover">
-  <h2 style="font-size: 2.5rem; font-weight: 900;">Neyi Keşfetmek İstersin?</h2>
-  <div class="cards">
-    <div class="kart">
-      <div class="kart-icon">🐱</div>
-      <h3>Scratch</h3>
-      <p>Bloklarla kendi oyununu yap!</p>
-    </div>
-    <div class="kart">
-      <div class="kart-icon">🤖</div>
-      <h3>Arduino</h3>
-      <p>Kendi robotunu kodla!</p>
-    </div>
-    <div class="kart">
-      <div class="kart-icon">🧊</div>
-      <h3>Tinkercad</h3>
-      <p>3 Boyutlu dünyanı tasarla!</p>
-    </div>
-    <div class="kart">
-      <div class="kart-icon">🧠</div>
-      <h3>Yapay Zeka</h3>
-      <p>Geleceğin dilini öğren!</p>
-    </div>
-  </div>
-</section>
-
-<footer>
-  © 2026 Kodbino · Kodlama ve Teknoloji Platformu
-</footer>
 
 </body>
 </html>
